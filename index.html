@@ -1,599 +1,1483 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Hannah's Bookshop</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --ink: #1a1008;
-    --parchment: #f5edd8;
-    --warm-white: #fdf8ef;
-    --cream: #ede5ce;
-    --brown: #6b3f1e;
-    --rust: #9b4a1f;
-    --gold: #c9972b;
-    --gold-light: #e8c96a;
-    --sage: #7a8c6e;
-    --shadow: rgba(26,16,8,0.15);
-    --deep-shadow: rgba(26,16,8,0.35);
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: var(--warm-white);
-    color: var(--ink);
-    font-family: 'Lora', Georgia, serif;
-    min-height: 100vh;
-    background-image:
-      radial-gradient(ellipse at 15% 10%, rgba(201,151,43,0.07) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 90%, rgba(107,63,30,0.07) 0%, transparent 55%);
-  }
-  body::before {
-    content:'';
-    position:fixed; inset:0;
-    pointer-events:none; z-index:999; opacity:.03;
-    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size:180px;
-  }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hannah's Bookshop</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=IM+Fell+English+SC&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ink: #1a1008;
+        --parchment: #f5edd8;
+        --warm-white: #fdf8ef;
+        --cream: #ede5ce;
+        --brown: #6b3f1e;
+        --rust: #9b4a1f;
+        --gold: #c9972b;
+        --gold-light: #e8c96a;
+        --sage: #7a8c6e;
+        --shadow: rgba(26, 16, 8, 0.15);
+        --deep-shadow: rgba(26, 16, 8, 0.35);
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--warm-white);
+        color: var(--ink);
+        font-family: "Lora", Georgia, serif;
+        min-height: 100vh;
+        background-image:
+          radial-gradient(
+            ellipse at 15% 10%,
+            rgba(201, 151, 43, 0.07) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 85% 90%,
+            rgba(107, 63, 30, 0.07) 0%,
+            transparent 55%
+          );
+      }
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 999;
+        opacity: 0.03;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        background-size: 180px;
+      }
 
-  /* HEADER */
-  header { background:var(--ink); position:relative; overflow:hidden; }
-  header::before {
-    content:''; position:absolute; inset:0;
-    background:radial-gradient(ellipse at 50% 120%, rgba(201,151,43,0.12) 0%, transparent 60%);
-  }
-  header::after {
-    content:''; position:absolute; bottom:0; left:0; right:0; height:3px;
-    background:linear-gradient(90deg, transparent, var(--brown), var(--gold), var(--gold-light), var(--gold), var(--brown), transparent);
-  }
-  .header-inner { max-width:960px; margin:0 auto; padding:52px 32px 44px; text-align:center; position:relative; }
-  .shop-eyebrow { color:var(--gold); font-size:.72rem; letter-spacing:.5em; font-family:'IM Fell English SC',serif; opacity:.75; margin-bottom:18px; display:block; }
-  h1.shop-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(2.8rem,7vw,4.6rem); font-weight:900; color:var(--parchment); line-height:1.0; letter-spacing:-.02em; }
-  h1.shop-title em { color:var(--gold-light); font-style:italic; }
-  .shop-tagline { color:rgba(245,237,216,.4); font-size:.82rem; letter-spacing:.3em; font-family:'IM Fell English SC',serif; margin-top:18px; }
-  .header-rule { width:60px; height:1px; background:var(--gold); opacity:.35; margin:18px auto 0; }
+      /* HEADER */
+      header {
+        background: var(--ink);
+        position: relative;
+        overflow: hidden;
+      }
+      header::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+          ellipse at 50% 120%,
+          rgba(201, 151, 43, 0.12) 0%,
+          transparent 60%
+        );
+      }
+      header::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--brown),
+          var(--gold),
+          var(--gold-light),
+          var(--gold),
+          var(--brown),
+          transparent
+        );
+      }
+      .header-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 52px 32px 44px;
+        text-align: center;
+        position: relative;
+      }
+      .shop-eyebrow {
+        color: var(--gold);
+        font-size: 0.72rem;
+        letter-spacing: 0.5em;
+        font-family: "IM Fell English SC", serif;
+        opacity: 0.75;
+        margin-bottom: 18px;
+        display: block;
+      }
+      h1.shop-title {
+        font-family: "Playfair Display", Georgia, serif;
+        font-size: clamp(2.8rem, 7vw, 4.6rem);
+        font-weight: 900;
+        color: var(--parchment);
+        line-height: 1;
+        letter-spacing: -0.02em;
+      }
+      h1.shop-title em {
+        color: var(--gold-light);
+        font-style: italic;
+      }
+      .shop-tagline {
+        color: rgba(245, 237, 216, 0.4);
+        font-size: 0.82rem;
+        letter-spacing: 0.3em;
+        font-family: "IM Fell English SC", serif;
+        margin-top: 18px;
+      }
+      .header-rule {
+        width: 60px;
+        height: 1px;
+        background: var(--gold);
+        opacity: 0.35;
+        margin: 18px auto 0;
+      }
 
-  /* NAV */
-  nav { background:var(--cream); border-bottom:1px solid rgba(107,63,30,.18); position:sticky; top:0; z-index:100; box-shadow:0 2px 16px var(--shadow); }
-  .nav-inner { max-width:960px; margin:0 auto; padding:0 32px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  .nav-links { display:flex; }
-  .nav-links button { background:none; border:none; border-bottom:2px solid transparent; padding:15px 22px; font-family:'IM Fell English SC',serif; font-size:.82rem; letter-spacing:.14em; color:var(--brown); cursor:pointer; transition:color .2s,border-color .2s,background .2s; }
-  .nav-links button:hover,.nav-links button.active { color:var(--rust); border-bottom-color:var(--gold); background:rgba(201,151,43,.06); }
-  .nav-right { display:flex; align-items:center; gap:12px; }
-  #auth-status { font-size:.72rem; color:var(--sage); font-style:italic; }
-  #auth-btn { background:var(--ink); color:var(--parchment); border:none; padding:8px 20px; font-family:'IM Fell English SC',serif; font-size:.76rem; letter-spacing:.12em; cursor:pointer; border-radius:2px; transition:background .2s,transform .15s; }
-  #auth-btn:hover { background:var(--brown); transform:translateY(-1px); }
+      /* NAV */
+      nav {
+        background: var(--cream);
+        border-bottom: 1px solid rgba(107, 63, 30, 0.18);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 16px var(--shadow);
+      }
+      .nav-inner {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .nav-links {
+        display: flex;
+      }
+      .nav-links button {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        padding: 15px 22px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.14em;
+        color: var(--brown);
+        cursor: pointer;
+        transition:
+          color 0.2s,
+          border-color 0.2s,
+          background 0.2s;
+      }
+      .nav-links button:hover,
+      .nav-links button.active {
+        color: var(--rust);
+        border-bottom-color: var(--gold);
+        background: rgba(201, 151, 43, 0.06);
+      }
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      #auth-status {
+        font-size: 0.72rem;
+        color: var(--sage);
+        font-style: italic;
+      }
+      #auth-btn {
+        background: var(--ink);
+        color: var(--parchment);
+        border: none;
+        padding: 8px 20px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.76rem;
+        letter-spacing: 0.12em;
+        cursor: pointer;
+        border-radius: 2px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      #auth-btn:hover {
+        background: var(--brown);
+        transform: translateY(-1px);
+      }
 
-  /* MAIN */
-  main { max-width:960px; margin:0 auto; padding:44px 32px 90px; }
+      /* MAIN */
+      main {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 44px 32px 90px;
+      }
 
-  /* SECTION HEADER */
-  .section-header { display:flex; align-items:center; gap:18px; margin-bottom:36px; }
-  .section-header h2 { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--brown); font-style:italic; white-space:nowrap; }
-  .section-rule { flex:1; height:1px; background:linear-gradient(90deg, rgba(201,151,43,.5), transparent); }
+      /* SECTION HEADER */
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 36px;
+      }
+      .section-header h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: var(--brown);
+        font-style: italic;
+        white-space: nowrap;
+      }
+      .section-rule {
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          rgba(201, 151, 43, 0.5),
+          transparent
+        );
+      }
 
-  /* WRITE PANEL */
-  #write-panel { background:var(--parchment); border:1px solid rgba(107,63,30,.22); border-radius:2px; padding:36px 40px; margin-bottom:48px; box-shadow:0 4px 28px var(--shadow),inset 0 1px 0 rgba(255,255,255,.7); display:none; animation:fadeSlide .35s ease; }
-  #write-panel h3 { font-family:'Playfair Display',serif; font-size:1.25rem; color:var(--brown); font-style:italic; margin-bottom:24px; }
-  .field-group { margin-bottom:18px; }
-  .field-group label { display:block; font-family:'IM Fell English SC',serif; font-size:.75rem; letter-spacing:.18em; color:var(--rust); margin-bottom:7px; }
-  .field-group input,.field-group textarea,.field-group select { width:100%; background:var(--warm-white); border:1px solid rgba(107,63,30,.28); border-radius:2px; padding:10px 14px; font-family:'Lora',serif; font-size:.95rem; color:var(--ink); transition:border-color .2s,box-shadow .2s; resize:vertical; }
-  .field-group input:focus,.field-group textarea:focus,.field-group select:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,151,43,.15); }
-  .field-group textarea { min-height:220px; line-height:1.75; }
-  .btn-primary { background:var(--brown); color:var(--parchment); border:none; padding:12px 34px; font-family:'IM Fell English SC',serif; font-size:.88rem; letter-spacing:.16em; cursor:pointer; border-radius:2px; box-shadow:0 2px 10px var(--shadow); transition:background .2s,transform .15s,box-shadow .2s; }
-  .btn-primary:hover { background:var(--rust); transform:translateY(-2px); box-shadow:0 5px 20px var(--deep-shadow); }
-  .btn-primary:disabled { opacity:.5; cursor:wait; transform:none; }
+      /* WRITE PANEL */
+      #write-panel {
+        background: var(--parchment);
+        border: 1px solid rgba(107, 63, 30, 0.22);
+        border-radius: 2px;
+        padding: 36px 40px;
+        margin-bottom: 48px;
+        box-shadow:
+          0 4px 28px var(--shadow),
+          inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        display: none;
+        animation: fadeSlide 0.35s ease;
+      }
+      #write-panel h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.25rem;
+        color: var(--brown);
+        font-style: italic;
+        margin-bottom: 24px;
+      }
+      .field-group {
+        margin-bottom: 18px;
+      }
+      .field-group label {
+        display: block;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.18em;
+        color: var(--rust);
+        margin-bottom: 7px;
+      }
+      .field-group input,
+      .field-group textarea,
+      .field-group select {
+        width: 100%;
+        background: var(--warm-white);
+        border: 1px solid rgba(107, 63, 30, 0.28);
+        border-radius: 2px;
+        padding: 10px 14px;
+        font-family: "Lora", serif;
+        font-size: 0.95rem;
+        color: var(--ink);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        resize: vertical;
+      }
+      .field-group input:focus,
+      .field-group textarea:focus,
+      .field-group select:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201, 151, 43, 0.15);
+      }
+      .field-group textarea {
+        min-height: 220px;
+        line-height: 1.75;
+      }
+      .btn-primary {
+        background: var(--brown);
+        color: var(--parchment);
+        border: none;
+        padding: 12px 34px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.88rem;
+        letter-spacing: 0.16em;
+        cursor: pointer;
+        border-radius: 2px;
+        box-shadow: 0 2px 10px var(--shadow);
+        transition:
+          background 0.2s,
+          transform 0.15s,
+          box-shadow 0.2s;
+      }
+      .btn-primary:hover {
+        background: var(--rust);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 20px var(--deep-shadow);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: wait;
+        transform: none;
+      }
 
-  /* CARDS */
-  .writings-grid { display:grid; gap:26px; }
-  .writing-card { background:#fff; border:1px solid rgba(107,63,30,.13); border-left:4px solid var(--gold); border-radius:2px; padding:30px 34px; box-shadow:0 2px 14px var(--shadow); cursor:pointer; transition:transform .22s,box-shadow .22s,border-left-color .22s; animation:fadeSlide .4s ease both; }
-  .writing-card:hover { transform:translateY(-4px); box-shadow:0 10px 36px var(--shadow); border-left-color:var(--rust); }
-  .card-genre { font-family:'IM Fell English SC',serif; font-size:.68rem; letter-spacing:.22em; color:var(--sage); margin-bottom:10px; }
-  .card-title { font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:700; color:var(--brown); line-height:1.2; margin-bottom:12px; }
-  .card-excerpt { color:rgba(26,16,8,.6); font-size:.88rem; line-height:1.78; font-style:italic; margin-bottom:18px; }
-  .card-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; }
-  .card-date { font-size:.72rem; color:rgba(26,16,8,.38); font-family:'IM Fell English SC',serif; letter-spacing:.1em; }
-  .card-stats { display:flex; align-items:center; gap:14px; }
-  .card-ccount { font-size:.72rem; color:var(--rust); font-family:'IM Fell English SC',serif; }
-  .btn-read { background:none; border:1px solid var(--brown); color:var(--brown); padding:5px 16px; font-family:'IM Fell English SC',serif; font-size:.72rem; letter-spacing:.12em; cursor:pointer; border-radius:2px; transition:background .2s,color .2s; }
-  .btn-read:hover { background:var(--brown); color:var(--parchment); }
+      /* CARDS */
+      .writings-grid {
+        display: grid;
+        gap: 26px;
+      }
+      .writing-card {
+        background: #fff;
+        border: 1px solid rgba(107, 63, 30, 0.13);
+        border-left: 4px solid var(--gold);
+        border-radius: 2px;
+        padding: 30px 34px;
+        box-shadow: 0 2px 14px var(--shadow);
+        cursor: pointer;
+        transition:
+          transform 0.22s,
+          box-shadow 0.22s,
+          border-left-color 0.22s;
+        animation: fadeSlide 0.4s ease both;
+      }
+      .writing-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 36px var(--shadow);
+        border-left-color: var(--rust);
+      }
+      .card-genre {
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.68rem;
+        letter-spacing: 0.22em;
+        color: var(--sage);
+        margin-bottom: 10px;
+      }
+      .card-title {
+        font-family: "Playfair Display", serif;
+        font-size: 1.45rem;
+        font-weight: 700;
+        color: var(--brown);
+        line-height: 1.2;
+        margin-bottom: 12px;
+      }
+      .card-excerpt {
+        color: rgba(26, 16, 8, 0.6);
+        font-size: 0.88rem;
+        line-height: 1.78;
+        font-style: italic;
+        margin-bottom: 18px;
+      }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      .card-date {
+        font-size: 0.72rem;
+        color: rgba(26, 16, 8, 0.38);
+        font-family: "IM Fell English SC", serif;
+        letter-spacing: 0.1em;
+      }
+      .card-stats {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .card-ccount {
+        font-size: 0.72rem;
+        color: var(--rust);
+        font-family: "IM Fell English SC", serif;
+      }
+      .btn-read {
+        background: none;
+        border: 1px solid var(--brown);
+        color: var(--brown);
+        padding: 5px 16px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.72rem;
+        letter-spacing: 0.12em;
+        cursor: pointer;
+        border-radius: 2px;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+      .btn-read:hover {
+        background: var(--brown);
+        color: var(--parchment);
+      }
 
-  /* POST VIEW */
-  #post-view { animation:fadeSlide .38s ease; }
-  .back-btn { display:inline-flex; align-items:center; gap:8px; background:none; border:none; color:var(--brown); font-family:'IM Fell English SC',serif; font-size:.78rem; letter-spacing:.12em; cursor:pointer; margin-bottom:32px; transition:color .2s; }
-  .back-btn:hover { color:var(--rust); }
-  .admin-bar { display:none; gap:10px; margin-bottom:22px; }
-  .btn-danger { background:none; border:1px solid #c0392b; color:#c0392b; padding:6px 16px; font-family:'IM Fell English SC',serif; font-size:.74rem; letter-spacing:.1em; cursor:pointer; border-radius:2px; transition:all .2s; }
-  .btn-danger:hover { background:#c0392b; color:#fff; }
-  .btn-danger:disabled { opacity:.5; cursor:wait; }
-  .post-header { border-bottom:1px solid rgba(107,63,30,.18); padding-bottom:28px; margin-bottom:36px; }
-  .post-genre { font-family:'IM Fell English SC',serif; font-size:.7rem; letter-spacing:.28em; color:var(--sage); margin-bottom:12px; }
-  .post-title { font-family:'Playfair Display',serif; font-size:clamp(1.9rem,4.5vw,3rem); font-weight:900; color:var(--ink); line-height:1.08; margin-bottom:16px; }
-  .post-date { font-size:.76rem; color:rgba(26,16,8,.4); font-family:'IM Fell English SC',serif; letter-spacing:.1em; }
-  .post-body { font-size:1.05rem; line-height:1.92; color:rgba(26,16,8,.82); margin-bottom:60px; white-space:pre-wrap; }
+      /* POST VIEW */
+      #post-view {
+        animation: fadeSlide 0.38s ease;
+      }
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: none;
+        border: none;
+        color: var(--brown);
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.78rem;
+        letter-spacing: 0.12em;
+        cursor: pointer;
+        margin-bottom: 32px;
+        transition: color 0.2s;
+      }
+      .back-btn:hover {
+        color: var(--rust);
+      }
+      .admin-bar {
+        display: none;
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+      .btn-danger {
+        background: none;
+        border: 1px solid #c0392b;
+        color: #c0392b;
+        padding: 6px 16px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.74rem;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s;
+      }
+      .btn-danger:hover {
+        background: #c0392b;
+        color: #fff;
+      }
+      .btn-danger:disabled {
+        opacity: 0.5;
+        cursor: wait;
+      }
+      .post-header {
+        border-bottom: 1px solid rgba(107, 63, 30, 0.18);
+        padding-bottom: 28px;
+        margin-bottom: 36px;
+      }
+      .post-genre {
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.28em;
+        color: var(--sage);
+        margin-bottom: 12px;
+      }
+      .post-title {
+        font-family: "Playfair Display", serif;
+        font-size: clamp(1.9rem, 4.5vw, 3rem);
+        font-weight: 900;
+        color: var(--ink);
+        line-height: 1.08;
+        margin-bottom: 16px;
+      }
+      .post-date {
+        font-size: 0.76rem;
+        color: rgba(26, 16, 8, 0.4);
+        font-family: "IM Fell English SC", serif;
+        letter-spacing: 0.1em;
+      }
+      .post-body {
+        font-size: 1.05rem;
+        line-height: 1.92;
+        color: rgba(26, 16, 8, 0.82);
+        margin-bottom: 60px;
+        white-space: pre-wrap;
+      }
 
-  /* COMMENTS */
-  .comments-section { border-top:1px solid rgba(107,63,30,.18); padding-top:44px; }
-  .comments-section > h3 { font-family:'Playfair Display',serif; font-size:1.3rem; color:var(--brown); font-style:italic; margin-bottom:28px; }
-  .comment-form { background:var(--parchment); border:1px solid rgba(107,63,30,.18); border-radius:2px; padding:28px 30px; margin-bottom:36px; box-shadow:inset 0 1px 0 rgba(255,255,255,.55); }
-  .comment-form h4 { font-family:'IM Fell English SC',serif; font-size:.82rem; letter-spacing:.16em; color:var(--rust); margin-bottom:16px; }
-  .comment-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
-  .comment-form input,.comment-form textarea { width:100%; background:var(--warm-white); border:1px solid rgba(107,63,30,.24); border-radius:2px; padding:10px 14px; font-family:'Lora',serif; font-size:.88rem; color:var(--ink); transition:border-color .2s,box-shadow .2s; resize:vertical; }
-  .comment-form input:focus,.comment-form textarea:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,151,43,.15); }
-  .comment-form textarea { min-height:88px; margin-bottom:14px; }
-  .btn-comment { background:var(--sage); color:#fff; border:none; padding:10px 26px; font-family:'IM Fell English SC',serif; font-size:.8rem; letter-spacing:.13em; cursor:pointer; border-radius:2px; transition:background .2s,transform .15s; }
-  .btn-comment:hover { background:#5f7053; transform:translateY(-1px); }
-  .btn-comment:disabled { opacity:.5; cursor:wait; transform:none; }
-  .comments-list { display:grid; gap:14px; }
-  .comment-item { background:#fff; border:1px solid rgba(107,63,30,.1); border-radius:2px; padding:18px 22px; position:relative; animation:fadeSlide .3s ease; }
-  .comment-author { font-family:'Playfair Display',serif; font-size:.92rem; font-weight:700; color:var(--brown); margin-bottom:6px; }
-  .comment-text { font-size:.87rem; line-height:1.72; color:rgba(26,16,8,.72); }
-  .comment-date { font-size:.68rem; color:rgba(26,16,8,.32); font-family:'IM Fell English SC',serif; letter-spacing:.08em; margin-top:10px; }
-  .btn-del-c { position:absolute; top:13px; right:14px; background:none; border:none; color:rgba(26,16,8,.22); cursor:pointer; font-size:.7rem; font-family:'IM Fell English SC',serif; transition:color .2s; }
-  .btn-del-c:hover { color:#c0392b; }
+      /* COMMENTS */
+      .comments-section {
+        border-top: 1px solid rgba(107, 63, 30, 0.18);
+        padding-top: 44px;
+      }
+      .comments-section > h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.3rem;
+        color: var(--brown);
+        font-style: italic;
+        margin-bottom: 28px;
+      }
+      .comment-form {
+        background: var(--parchment);
+        border: 1px solid rgba(107, 63, 30, 0.18);
+        border-radius: 2px;
+        padding: 28px 30px;
+        margin-bottom: 36px;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      }
+      .comment-form h4 {
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.16em;
+        color: var(--rust);
+        margin-bottom: 16px;
+      }
+      .comment-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+      }
+      .comment-form input,
+      .comment-form textarea {
+        width: 100%;
+        background: var(--warm-white);
+        border: 1px solid rgba(107, 63, 30, 0.24);
+        border-radius: 2px;
+        padding: 10px 14px;
+        font-family: "Lora", serif;
+        font-size: 0.88rem;
+        color: var(--ink);
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+        resize: vertical;
+      }
+      .comment-form input:focus,
+      .comment-form textarea:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201, 151, 43, 0.15);
+      }
+      .comment-form textarea {
+        min-height: 88px;
+        margin-bottom: 14px;
+      }
+      .btn-comment {
+        background: var(--sage);
+        color: #fff;
+        border: none;
+        padding: 10px 26px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.8rem;
+        letter-spacing: 0.13em;
+        cursor: pointer;
+        border-radius: 2px;
+        transition:
+          background 0.2s,
+          transform 0.15s;
+      }
+      .btn-comment:hover {
+        background: #5f7053;
+        transform: translateY(-1px);
+      }
+      .btn-comment:disabled {
+        opacity: 0.5;
+        cursor: wait;
+        transform: none;
+      }
+      .comments-list {
+        display: grid;
+        gap: 14px;
+      }
+      .comment-item {
+        background: #fff;
+        border: 1px solid rgba(107, 63, 30, 0.1);
+        border-radius: 2px;
+        padding: 18px 22px;
+        position: relative;
+        animation: fadeSlide 0.3s ease;
+      }
+      .comment-author {
+        font-family: "Playfair Display", serif;
+        font-size: 0.92rem;
+        font-weight: 700;
+        color: var(--brown);
+        margin-bottom: 6px;
+      }
+      .comment-text {
+        font-size: 0.87rem;
+        line-height: 1.72;
+        color: rgba(26, 16, 8, 0.72);
+      }
+      .comment-date {
+        font-size: 0.68rem;
+        color: rgba(26, 16, 8, 0.32);
+        font-family: "IM Fell English SC", serif;
+        letter-spacing: 0.08em;
+        margin-top: 10px;
+      }
+      .btn-del-c {
+        position: absolute;
+        top: 13px;
+        right: 14px;
+        background: none;
+        border: none;
+        color: rgba(26, 16, 8, 0.22);
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-family: "IM Fell English SC", serif;
+        transition: color 0.2s;
+      }
+      .btn-del-c:hover {
+        color: #c0392b;
+      }
 
-  /* EMPTY / SPINNER */
-  .empty-state { text-align:center; padding:72px 32px; }
-  .empty-state .glyph { font-size:3rem; opacity:.18; margin-bottom:20px; }
-  .empty-state p { color:rgba(26,16,8,.38); font-style:italic; font-size:.95rem; line-height:1.8; }
-  .spinner { width:28px; height:28px; border:2px solid rgba(107,63,30,.15); border-top-color:var(--gold); border-radius:50%; animation:spin .7s linear infinite; margin:60px auto; }
-  @keyframes spin { to { transform:rotate(360deg); } }
+      /* EMPTY / SPINNER */
+      .empty-state {
+        text-align: center;
+        padding: 72px 32px;
+      }
+      .empty-state .glyph {
+        font-size: 3rem;
+        opacity: 0.18;
+        margin-bottom: 20px;
+      }
+      .empty-state p {
+        color: rgba(26, 16, 8, 0.38);
+        font-style: italic;
+        font-size: 0.95rem;
+        line-height: 1.8;
+      }
+      .spinner {
+        width: 28px;
+        height: 28px;
+        border: 2px solid rgba(107, 63, 30, 0.15);
+        border-top-color: var(--gold);
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 60px auto;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
 
-  /* ABOUT */
-  #about-page { max-width:620px; margin:0 auto; text-align:center; padding:40px 0; animation:fadeSlide .4s ease; }
-  .portrait-ring { width:100px; height:100px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--rust)); margin:0 auto 26px; display:flex; align-items:center; justify-content:center; font-size:2.6rem; box-shadow:0 4px 24px var(--shadow); }
-  #about-page h2 { font-family:'Playfair Display',serif; font-size:1.9rem; color:var(--brown); font-style:italic; margin-bottom:8px; }
-  .about-role { font-family:'IM Fell English SC',serif; font-size:.75rem; letter-spacing:.26em; color:var(--sage); margin-bottom:30px; }
-  .about-bio-display { font-size:.97rem; line-height:1.88; color:rgba(26,16,8,.68); font-style:italic; border-left:3px solid var(--gold); padding-left:22px; text-align:left; margin-bottom:24px; }
-  .about-bio-edit { display:none; width:100%; background:var(--warm-white); border:1px solid rgba(107,63,30,.24); border-radius:2px; padding:12px 16px; font-family:'Lora',serif; font-size:.95rem; color:var(--ink); min-height:130px; resize:vertical; line-height:1.72; margin-bottom:14px; text-align:left; transition:border-color .2s,box-shadow .2s; }
-  .about-bio-edit:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,151,43,.15); }
+      /* ABOUT */
+      #about-page {
+        max-width: 620px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 40px 0;
+        animation: fadeSlide 0.4s ease;
+      }
+      .portrait-ring {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--gold), var(--rust));
+        margin: 0 auto 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.6rem;
+        box-shadow: 0 4px 24px var(--shadow);
+      }
+      #about-page h2 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.9rem;
+        color: var(--brown);
+        font-style: italic;
+        margin-bottom: 8px;
+      }
+      .about-role {
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.75rem;
+        letter-spacing: 0.26em;
+        color: var(--sage);
+        margin-bottom: 30px;
+      }
+      .about-bio-display {
+        font-size: 0.97rem;
+        line-height: 1.88;
+        color: rgba(26, 16, 8, 0.68);
+        font-style: italic;
+        border-left: 3px solid var(--gold);
+        padding-left: 22px;
+        text-align: left;
+        margin-bottom: 24px;
+      }
+      .about-bio-edit {
+        display: none;
+        width: 100%;
+        background: var(--warm-white);
+        border: 1px solid rgba(107, 63, 30, 0.24);
+        border-radius: 2px;
+        padding: 12px 16px;
+        font-family: "Lora", serif;
+        font-size: 0.95rem;
+        color: var(--ink);
+        min-height: 130px;
+        resize: vertical;
+        line-height: 1.72;
+        margin-bottom: 14px;
+        text-align: left;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .about-bio-edit:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201, 151, 43, 0.15);
+      }
 
-  /* LOGIN MODAL */
-  .overlay { position:fixed; inset:0; background:rgba(26,16,8,.62); backdrop-filter:blur(4px); z-index:200; display:none; align-items:center; justify-content:center; }
-  .overlay.open { display:flex; animation:fadeSlide .25s ease; }
-  .modal { background:var(--parchment); border:1px solid rgba(107,63,30,.28); border-radius:2px; padding:44px 48px; max-width:380px; width:92%; box-shadow:0 20px 80px rgba(26,16,8,.45); position:relative; }
-  .modal-x { position:absolute; top:14px; right:16px; background:none; border:none; font-size:1.15rem; color:rgba(26,16,8,.35); cursor:pointer; transition:color .2s; }
-  .modal-x:hover { color:var(--ink); }
-  .modal h3 { font-family:'Playfair Display',serif; font-size:1.5rem; color:var(--brown); font-style:italic; margin-bottom:4px; }
-  .modal .modal-sub { font-size:.8rem; color:rgba(26,16,8,.45); font-style:italic; margin-bottom:26px; }
-  .modal input { width:100%; background:var(--warm-white); border:1px solid rgba(107,63,30,.28); border-radius:2px; padding:11px 14px; font-family:'Lora',serif; font-size:.95rem; color:var(--ink); margin-bottom:14px; transition:border-color .2s,box-shadow .2s; }
-  .modal input:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,151,43,.15); }
-  .modal-err { color:#c0392b; font-size:.78rem; font-style:italic; margin-bottom:12px; min-height:20px; }
-  .btn-modal-login { width:100%; background:var(--brown); color:var(--parchment); border:none; padding:13px; font-family:'IM Fell English SC',serif; font-size:.88rem; letter-spacing:.18em; cursor:pointer; border-radius:2px; transition:background .2s; }
-  .btn-modal-login:hover { background:var(--rust); }
+      /* LOGIN MODAL */
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 16, 8, 0.62);
+        backdrop-filter: blur(4px);
+        z-index: 200;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay.open {
+        display: flex;
+        animation: fadeSlide 0.25s ease;
+      }
+      .modal {
+        background: var(--parchment);
+        border: 1px solid rgba(107, 63, 30, 0.28);
+        border-radius: 2px;
+        padding: 44px 48px;
+        max-width: 380px;
+        width: 92%;
+        box-shadow: 0 20px 80px rgba(26, 16, 8, 0.45);
+        position: relative;
+      }
+      .modal-x {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        background: none;
+        border: none;
+        font-size: 1.15rem;
+        color: rgba(26, 16, 8, 0.35);
+        cursor: pointer;
+        transition: color 0.2s;
+      }
+      .modal-x:hover {
+        color: var(--ink);
+      }
+      .modal h3 {
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        color: var(--brown);
+        font-style: italic;
+        margin-bottom: 4px;
+      }
+      .modal .modal-sub {
+        font-size: 0.8rem;
+        color: rgba(26, 16, 8, 0.45);
+        font-style: italic;
+        margin-bottom: 26px;
+      }
+      .modal input {
+        width: 100%;
+        background: var(--warm-white);
+        border: 1px solid rgba(107, 63, 30, 0.28);
+        border-radius: 2px;
+        padding: 11px 14px;
+        font-family: "Lora", serif;
+        font-size: 0.95rem;
+        color: var(--ink);
+        margin-bottom: 14px;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .modal input:focus {
+        outline: none;
+        border-color: var(--gold);
+        box-shadow: 0 0 0 3px rgba(201, 151, 43, 0.15);
+      }
+      .modal-err {
+        color: #c0392b;
+        font-size: 0.78rem;
+        font-style: italic;
+        margin-bottom: 12px;
+        min-height: 20px;
+      }
+      .btn-modal-login {
+        width: 100%;
+        background: var(--brown);
+        color: var(--parchment);
+        border: none;
+        padding: 13px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.88rem;
+        letter-spacing: 0.18em;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: background 0.2s;
+      }
+      .btn-modal-login:hover {
+        background: var(--rust);
+      }
 
-  /* TOAST */
-  .toast { position:fixed; bottom:28px; right:28px; background:var(--ink); color:var(--parchment); padding:12px 22px; border-radius:2px; font-family:'IM Fell English SC',serif; font-size:.82rem; letter-spacing:.1em; box-shadow:0 6px 28px rgba(26,16,8,.5); border-left:3px solid var(--gold); transform:translateY(90px); opacity:0; transition:all .38s cubic-bezier(0.16,1,0.3,1); z-index:500; max-width:300px; }
-  .toast.show { transform:translateY(0); opacity:1; }
-  .toast.err { border-left-color:#c0392b; }
+      /* TOAST */
+      .toast {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        background: var(--ink);
+        color: var(--parchment);
+        padding: 12px 22px;
+        border-radius: 2px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.82rem;
+        letter-spacing: 0.1em;
+        box-shadow: 0 6px 28px rgba(26, 16, 8, 0.5);
+        border-left: 3px solid var(--gold);
+        transform: translateY(90px);
+        opacity: 0;
+        transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 500;
+        max-width: 300px;
+      }
+      .toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .toast.err {
+        border-left-color: #c0392b;
+      }
 
-  @keyframes fadeSlide { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-  footer { background:var(--ink); color:rgba(245,237,216,.35); text-align:center; padding:22px 32px; font-family:'IM Fell English SC',serif; font-size:.7rem; letter-spacing:.22em; }
-  footer span { color:var(--gold); opacity:.6; }
+      footer {
+        background: var(--ink);
+        color: rgba(245, 237, 216, 0.35);
+        text-align: center;
+        padding: 22px 32px;
+        font-family: "IM Fell English SC", serif;
+        font-size: 0.7rem;
+        letter-spacing: 0.22em;
+      }
+      footer span {
+        color: var(--gold);
+        opacity: 0.6;
+      }
 
-  @media(max-width:600px) {
-    .header-inner{padding:38px 20px 30px} main{padding:28px 20px 64px}
-    #write-panel{padding:24px 18px} .writing-card{padding:22px 18px}
-    .modal{padding:32px 22px} .comment-form{padding:20px 18px}
-    .comment-row{grid-template-columns:1fr}
-  }
-</style>
-</head>
-<body>
+      @media (max-width: 600px) {
+        .header-inner {
+          padding: 38px 20px 30px;
+        }
+        main {
+          padding: 28px 20px 64px;
+        }
+        #write-panel {
+          padding: 24px 18px;
+        }
+        .writing-card {
+          padding: 22px 18px;
+        }
+        .modal {
+          padding: 32px 22px;
+        }
+        .comment-form {
+          padding: 20px 18px;
+        }
+        .comment-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // ══════════════════════════════════════════
+      //  CONFIG — paste your Supabase values here
+      // ══════════════════════════════════════════
+      const CONFIG = {
+        supabaseUrl: "https://nrrfgosvdxiowkdlanmy.supabase.co",
+        supabaseKey:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ycmZnb3N2ZHhpb3drZGxhbm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzY1OTIsImV4cCI6MjA5MTE1MjU5Mn0.JKAWqJqqM4JaUykyJ04_fR7fhoL0CfD5IUihC8vcS20", // long eyJ... string
+        password: "Hannah@2009", // Hannah's login password
+      };
+    </script>
 
-<!--
-  ╔══════════════════════════════════════════════╗
-  ║           HANNAH'S BOOKSHOP CONFIG           ║
-  ║                                              ║
-  ║  Fill in the three values below, then        ║
-  ║  follow the README to finish the setup.      ║
-  ╚══════════════════════════════════════════════╝
--->
-<script>
-const CONFIG = {
-  supabaseUrl: "https://nrrfgosvdxiowkdlanmy.supabase.co",
-  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ycmZnb3N2ZHhpb3drZGxhbm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzY1OTIsImV4cCI6MjA5MTE1MjU5Mn0.JKAWqJqqM4JaUykyJ04_fR7fhoL0CfD5IUihC8vcS20",
-};
-</script>
-
-<header>
-  <div class="header-inner">
-    <span class="shop-eyebrow">✦ Est. with love ✦</span>
-    <h1 class="shop-title"><em>Hannah's</em> Bookshop</h1>
-    <p class="shop-tagline">A corner of the internet for stories &amp; musings</p>
-    <div class="header-rule"></div>
-  </div>
-</header>
-
-<nav>
-  <div class="nav-inner">
-    <div class="nav-links">
-      <button class="active" id="nav-library" onclick="showPage('library')">Library</button>
-      <button id="nav-about" onclick="showPage('about')">About</button>
-    </div>
-    <div class="nav-right">
-      <span id="auth-status"></span>
-      <button id="auth-btn" onclick="handleAuth()">Hannah's Desk</button>
-    </div>
-  </div>
-</nav>
-
-<main>
-
-  <!-- LIBRARY -->
-  <div id="library-page">
-    <div id="write-panel">
-      <h3>✍ Publish a New Writing</h3>
-      <div class="field-group">
-        <label>Title</label>
-        <input type="text" id="new-title" placeholder="What shall we call it…" maxlength="120"/>
+    <header>
+      <div class="header-inner">
+        <span class="shop-eyebrow">✦ Est. with love ✦</span>
+        <h1 class="shop-title"><em>Hannah's</em> Bookshop</h1>
+        <p class="shop-tagline">
+          A corner of the internet for stories &amp; musings
+        </p>
+        <div class="header-rule"></div>
       </div>
-      <div class="field-group">
-        <label>Genre</label>
-        <select id="new-genre">
-          <option>Short Story</option><option>Essay</option><option>Poetry</option>
-          <option>Flash Fiction</option><option>Memoir</option><option>Reflection</option><option>Other</option>
-        </select>
-      </div>
-      <div class="field-group">
-        <label>Your Writing</label>
-        <textarea id="new-body" placeholder="Pour your words here…"></textarea>
-      </div>
-      <button class="btn-primary" id="btn-publish" onclick="publishWriting()">Publish to the Shelf ✦</button>
-    </div>
+    </header>
 
-    <!-- Writings list -->
-    <div id="writings-wrap">
-      <div class="section-header">
-        <h2>On the Shelf</h2>
-        <div class="section-rule"></div>
-      </div>
-      <div class="writings-grid" id="writings-grid"></div>
-    </div>
-
-    <!-- Single post -->
-    <div id="post-view" style="display:none">
-      <button class="back-btn" onclick="closePost()">← Back to the shelf</button>
-      <div class="admin-bar" id="admin-bar">
-        <button class="btn-danger" id="btn-del-post" onclick="deletePost()">Delete Writing</button>
-      </div>
-      <div class="post-header">
-        <div class="post-genre" id="vw-genre"></div>
-        <div class="post-title"  id="vw-title"></div>
-        <div class="post-date"   id="vw-date"></div>
-      </div>
-      <div class="post-body" id="vw-body"></div>
-
-      <div class="comments-section">
-        <h3>Reader's Corner</h3>
-        <div class="comment-form">
-          <h4>Leave a Note — no account needed</h4>
-          <div class="comment-row">
-            <input id="c-name"  type="text"  placeholder="Your name (or a pen name)…" maxlength="60"/>
-            <input id="c-email" type="email" placeholder="Email (optional, never shown)…" maxlength="80"/>
-          </div>
-          <textarea id="c-text" placeholder="What did you think? Share your thoughts…" maxlength="1000"></textarea>
-          <button class="btn-comment" id="btn-comment" onclick="submitComment()">Post Comment ✦</button>
+    <nav>
+      <div class="nav-inner">
+        <div class="nav-links">
+          <button class="active" id="nav-library" onclick="showPage('library')">
+            Library
+          </button>
+          <button id="nav-about" onclick="showPage('about')">About</button>
         </div>
-        <div class="comments-list" id="comments-list"></div>
+        <div class="nav-right">
+          <span id="auth-status"></span>
+          <button id="auth-btn" onclick="handleAuth()">Hannah's Desk</button>
+        </div>
+      </div>
+    </nav>
+
+    <main>
+      <!-- LIBRARY -->
+      <div id="library-page">
+        <div id="write-panel">
+          <h3>✍ Publish a New Writing</h3>
+          <div class="field-group">
+            <label>Title</label>
+            <input
+              type="text"
+              id="new-title"
+              placeholder="What shall we call it…"
+              maxlength="120"
+            />
+          </div>
+          <div class="field-group">
+            <label>Genre</label>
+            <select id="new-genre">
+              <option>Short Story</option>
+              <option>Essay</option>
+              <option>Poetry</option>
+              <option>Flash Fiction</option>
+              <option>Memoir</option>
+              <option>Reflection</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Your Writing</label>
+            <textarea
+              id="new-body"
+              placeholder="Pour your words here…"
+            ></textarea>
+          </div>
+          <button
+            class="btn-primary"
+            id="btn-publish"
+            onclick="publishWriting()"
+          >
+            Publish to the Shelf ✦
+          </button>
+        </div>
+
+        <div id="writings-wrap">
+          <div class="section-header">
+            <h2>On the Shelf</h2>
+            <div class="section-rule"></div>
+          </div>
+          <div class="writings-grid" id="writings-grid"></div>
+        </div>
+
+        <!-- Single post view -->
+        <div id="post-view" style="display: none">
+          <button class="back-btn" onclick="closePost()">
+            ← Back to the shelf
+          </button>
+          <div class="admin-bar" id="admin-bar">
+            <button class="btn-danger" id="btn-del-post" onclick="deletePost()">
+              Delete Writing
+            </button>
+          </div>
+          <div class="post-header">
+            <div class="post-genre" id="vw-genre"></div>
+            <div class="post-title" id="vw-title"></div>
+            <div class="post-date" id="vw-date"></div>
+          </div>
+          <div class="post-body" id="vw-body"></div>
+
+          <div class="comments-section">
+            <h3>Reader's Corner</h3>
+            <div class="comment-form">
+              <h4>Leave a Note — no account needed</h4>
+              <div class="comment-row">
+                <input
+                  id="c-name"
+                  type="text"
+                  placeholder="Your name (or a pen name)…"
+                  maxlength="60"
+                />
+                <input
+                  id="c-email"
+                  type="email"
+                  placeholder="Email (optional, never shown)…"
+                  maxlength="80"
+                />
+              </div>
+              <textarea
+                id="c-text"
+                placeholder="What did you think? Share your thoughts…"
+                maxlength="1000"
+              ></textarea>
+              <button
+                class="btn-comment"
+                id="btn-comment"
+                onclick="submitComment()"
+              >
+                Post Comment ✦
+              </button>
+            </div>
+            <div class="comments-list" id="comments-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABOUT -->
+      <div id="about-page" style="display: none">
+        <div class="portrait-ring">📚</div>
+        <h2>Hannah</h2>
+        <p class="about-role">
+          Author · Storyteller · Keeper of this little shop
+        </p>
+        <div class="about-bio-display" id="about-display">Loading…</div>
+        <textarea
+          class="about-bio-edit"
+          id="about-edit"
+          maxlength="700"
+        ></textarea>
+        <div id="about-save-row" style="display: none">
+          <button class="btn-primary" id="btn-save-about" onclick="saveAbout()">
+            Save Bio ✦
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <span>✦</span> &nbsp; Hannah's Bookshop &nbsp; <span>✦</span> &nbsp; All
+      writings belong to their author &nbsp; <span>✦</span>
+    </footer>
+
+    <!-- LOGIN MODAL -->
+    <div class="overlay" id="login-modal">
+      <div class="modal">
+        <button class="modal-x" onclick="closeModal()">✕</button>
+        <h3>Welcome back,</h3>
+        <p class="modal-sub">Hannah's desk is password-protected.</p>
+        <input
+          type="password"
+          id="pw-input"
+          placeholder="Your secret password…"
+          onkeydown="if (event.key === 'Enter') tryLogin();"
+        />
+        <div class="modal-err" id="modal-err"></div>
+        <button class="btn-modal-login" onclick="tryLogin()">
+          Open the Desk
+        </button>
       </div>
     </div>
-  </div>
 
-  <!-- ABOUT -->
-  <div id="about-page" style="display:none">
-    <div class="portrait-ring">📚</div>
-    <h2>Hannah</h2>
-    <p class="about-role">Author · Storyteller · Keeper of this little shop</p>
-    <div class="about-bio-display" id="about-display">Loading…</div>
-    <textarea class="about-bio-edit" id="about-edit" maxlength="700"></textarea>
-    <div id="about-save-row" style="display:none">
-      <button class="btn-primary" id="btn-save-about" onclick="saveAbout()">Save Bio ✦</button>
-    </div>
-  </div>
+    <div class="toast" id="toast"></div>
 
-</main>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+      // ── STATE ─────────────────────────────────
+      let isHannah = false;
+      let posts = [];
+      let comments = [];
+      let aboutTxt = "Welcome to my little corner of the internet.";
+      let currentPostId = null;
 
-<footer>
-  <span>✦</span> &nbsp; Hannah's Bookshop &nbsp; <span>✦</span> &nbsp; All writings belong to their author &nbsp; <span>✦</span>
-</footer>
+      // Init Supabase client
+      const sb = window.supabase.createClient(
+        CONFIG.supabaseUrl,
+        CONFIG.supabaseKey,
+      );
 
-<!-- LOGIN MODAL -->
-<div class="overlay" id="login-modal">
-  <div class="modal">
-    <button class="modal-x" onclick="closeModal()">✕</button>
-    <h3>Welcome back,</h3>
-    <p class="modal-sub">Hannah's desk is password-protected.</p>
-    <input type="password" id="pw-input" placeholder="Your secret password…"
-           onkeydown="if(event.key==='Enter') tryLogin()"/>
-    <div class="modal-err" id="modal-err"></div>
-    <button class="btn-modal-login" onclick="tryLogin()">Open the Desk</button>
-  </div>
-</div>
+      // ── LOAD ──────────────────────────────────
+      async function loadAll() {
+        showSpinner("writings-grid");
 
-<div class="toast" id="toast"></div>
+        // FIX: added .order() so newest posts show first
+        const { data: postsData, error: postsErr } = await sb
+          .from("posts")
+          .select("*")
+          .order("date", { ascending: false });
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-// ── STATE ─────────────────────────────────
-let isHannah = false;
-let posts    = [];
-let comments = [];
-let aboutTxt = "Welcome to my little corner of the internet. Here I share the stories, essays, and musings that live in my head and eventually find their way onto the page. Pull up a chair, make yourself at home.";
-let currentPostId = null;
+        if (postsErr) {
+          console.error("Posts load error:", postsErr.message);
+          toast("Could not load posts: " + postsErr.message, true);
+        }
 
-const supabase = window.supabase.createClient(
-  CONFIG.supabaseUrl,
-  CONFIG.supabaseKey
-);
-  
-// ── LOAD ──────────────────────────────────
-async function loadAll() {
-  showSpinner('writings-grid');
+        // FIX: column is "postId" (camelCase) — matches the SQL schema exactly
+        const { data: commentsData, error: commentsErr } = await sb
+          .from("comments")
+          .select("*")
+          .order("date", { ascending: false });
 
-  const { data: postsData } = await supabase
-    .from("posts")
-    .select("*");
+        if (commentsErr) {
+          console.error("Comments load error:", commentsErr.message);
+        }
 
-  const { data: commentsData } = await supabase
-    .from("comments")
-    .select("*");
+        posts = postsData || [];
+        comments = commentsData || [];
 
-  posts = postsData || [];
-  comments = commentsData || [];
+        renderWritings();
+      }
 
-  renderWritings();
-}
+      async function loadAbout() {
+        const { data, error } = await sb
+          .from("about")
+          .select("text")
+          .eq("id", 1)
+          .single();
 
-async function loadAbout() {
-  const { data } = await supabase
-    .from("about")
-    .select("text")
-    .eq("id", 1)
-    .single();
+        if (error) {
+          console.error("About load error:", error.message);
+          // Row may not exist yet; show default text
+          renderAboutDisplay();
+          return;
+        }
 
-  if (data?.text) aboutTxt = data.text;
-  renderAboutDisplay();
-}
+        if (data?.text) aboutTxt = data.text;
+        renderAboutDisplay();
+      }
 
-// ── AUTH ──────────────────────────────────
-function handleAuth() { isHannah ? logout() : openModal(); }
+      // ── AUTH ──────────────────────────────────
+      function handleAuth() {
+        isHannah ? logout() : openModal();
+      }
 
-function openModal() {
-  document.getElementById('login-modal').classList.add('open');
-  document.getElementById('pw-input').value = '';
-  document.getElementById('modal-err').textContent = '';
-  setTimeout(()=>document.getElementById('pw-input').focus(), 80);
-}
-function closeModal() { document.getElementById('login-modal').classList.remove('open'); }
+      function openModal() {
+        document.getElementById("login-modal").classList.add("open");
+        document.getElementById("pw-input").value = "";
+        document.getElementById("modal-err").textContent = "";
+        setTimeout(() => document.getElementById("pw-input").focus(), 80);
+      }
+      function closeModal() {
+        document.getElementById("login-modal").classList.remove("open");
+      }
 
-function tryLogin() {
-  if (document.getElementById('pw-input').value !== CONFIG.password) {
-    document.getElementById('modal-err').textContent = "That's not quite right. Try again.";
-    document.getElementById('pw-input').value = '';
-    document.getElementById('pw-input').focus();
-    return;
-  }
-  if (!CONFIG.token) {
-    document.getElementById('modal-err').textContent = "No GitHub token set in CONFIG — Hannah can't write yet.";
-    return;
-  }
-  isHannah = true;
-  closeModal();
-  updateAuthUI();
-  if (currentPostId) document.getElementById('admin-bar').style.display = 'flex';
-  toast("Welcome back, Hannah ✦");
-}
+      function tryLogin() {
+        // FIX: removed the broken token check — token isn't used, so we don't need it
+        if (document.getElementById("pw-input").value !== CONFIG.password) {
+          document.getElementById("modal-err").textContent =
+            "That's not quite right. Try again.";
+          document.getElementById("pw-input").value = "";
+          document.getElementById("pw-input").focus();
+          return;
+        }
+        isHannah = true;
+        closeModal();
+        updateAuthUI();
+        if (currentPostId)
+          document.getElementById("admin-bar").style.display = "flex";
+        toast("Welcome back, Hannah ✦");
+      }
 
-function logout() {
-  isHannah = false;
-  updateAuthUI();
-  document.getElementById('admin-bar').style.display = 'none';
-  renderAboutDisplay();
-  if (currentPostId) renderComments(); // hide delete buttons
-  toast("Logged out. See you soon!");
-}
+      function logout() {
+        isHannah = false;
+        updateAuthUI();
+        document.getElementById("admin-bar").style.display = "none";
+        renderAboutDisplay();
+        if (currentPostId) renderComments();
+        toast("Logged out. See you soon!");
+      }
 
-function updateAuthUI() {
-  document.getElementById('auth-btn').textContent = isHannah ? "Log Out" : "Hannah's Desk";
-  document.getElementById('auth-status').textContent = isHannah ? "✦ Hannah" : "";
-  document.getElementById('write-panel').style.display = isHannah ? 'block' : 'none';
-}
+      function updateAuthUI() {
+        document.getElementById("auth-btn").textContent = isHannah
+          ? "Log Out"
+          : "Hannah's Desk";
+        document.getElementById("auth-status").textContent = isHannah
+          ? "✦ Hannah"
+          : "";
+        document.getElementById("write-panel").style.display = isHannah
+          ? "block"
+          : "none";
+      }
 
-// ── PAGES ─────────────────────────────────
-function showPage(p) {
-  document.getElementById('library-page').style.display = p==='library' ? 'block' : 'none';
-  document.getElementById('about-page').style.display   = p==='about'   ? 'block' : 'none';
-  document.getElementById('nav-library').classList.toggle('active', p==='library');
-  document.getElementById('nav-about').classList.toggle('active',   p==='about');
-  if (p==='about') { loadAbout(); }
-}
+      // ── PAGES ─────────────────────────────────
+      function showPage(p) {
+        document.getElementById("library-page").style.display =
+          p === "library" ? "block" : "none";
+        document.getElementById("about-page").style.display =
+          p === "about" ? "block" : "none";
+        document
+          .getElementById("nav-library")
+          .classList.toggle("active", p === "library");
+        document
+          .getElementById("nav-about")
+          .classList.toggle("active", p === "about");
+        if (p === "about") loadAbout();
+      }
 
-// ── WRITINGS ──────────────────────────────
-function renderWritings() {
-  const grid = document.getElementById('writings-grid');
-  if (!posts.length) {
-    grid.innerHTML = `<div class="empty-state"><div class="glyph">📖</div><p>The shelf is empty for now — Hannah is still writing.</p></div>`;
-    return;
-  }
-  grid.innerHTML = posts.slice().reverse().map((p, i) => {
-    const count   = comments.filter(c => c.postId === p.id).length;
-    const excerpt = p.body.length > 190 ? p.body.slice(0,190).trim() + '…' : p.body;
-    return `<div class="writing-card" style="animation-delay:${i*.06}s" onclick="openPost('${p.id}')">
+      // ── WRITINGS ──────────────────────────────
+      function renderWritings() {
+        const grid = document.getElementById("writings-grid");
+        if (!posts.length) {
+          grid.innerHTML = `<div class="empty-state"><div class="glyph">📖</div><p>The shelf is empty for now — Hannah is still writing.</p></div>`;
+          return;
+        }
+        // Posts already ordered newest-first from Supabase; no need to reverse
+        grid.innerHTML = posts
+          .map((p, i) => {
+            const count = comments.filter((c) => c.postId === p.id).length;
+            const excerpt =
+              p.body.length > 190 ? p.body.slice(0, 190).trim() + "…" : p.body;
+            return `<div class="writing-card" style="animation-delay:${i * 0.06}s" onclick="openPost('${p.id}')">
       <div class="card-genre">${e(p.genre)}</div>
       <div class="card-title">${e(p.title)}</div>
       <div class="card-excerpt">${e(excerpt)}</div>
       <div class="card-footer">
         <span class="card-date">${fmt(p.date)}</span>
         <div class="card-stats">
-          <span class="card-ccount">${count} comment${count!==1?'s':''}</span>
+          <span class="card-ccount">${count} comment${count !== 1 ? "s" : ""}</span>
           <button class="btn-read" onclick="event.stopPropagation();openPost('${p.id}')">Read →</button>
         </div>
       </div>
     </div>`;
-  }).join('');
-}
+          })
+          .join("");
+      }
 
-async function publishWriting() {
-  if (!isHannah) return;
+      async function publishWriting() {
+        if (!isHannah) return;
 
-  const title = document.getElementById('new-title').value.trim();
-  const genre = document.getElementById('new-genre').value;
-  const body  = document.getElementById('new-body').value.trim();
+        const title = document.getElementById("new-title").value.trim();
+        const genre = document.getElementById("new-genre").value;
+        const body = document.getElementById("new-body").value.trim();
 
-  if (!title || !body) return toast("Fill everything", true);
+        if (!title || !body)
+          return toast("Fill in the title and writing first.", true);
 
-  const post = {
-    id: "p_" + Date.now(),
-    title,
-    genre,
-    body,
-    date: new Date().toISOString()
-  };
+        const btn = document.getElementById("btn-publish");
+        btn.disabled = true;
+        btn.textContent = "Publishing…";
 
-  const { error } = await supabase.from("posts").insert(post);
+        const post = {
+          id: "p_" + Date.now(),
+          title,
+          genre,
+          body,
+          date: new Date().toISOString(),
+        };
 
-  if (error) return toast(error.message, true);
+        const { error } = await sb.from("posts").insert(post);
 
-  posts.push(post);
-  renderWritings();
-  toast("Published ✦");
-}
+        btn.disabled = false;
+        btn.textContent = "Publish to the Shelf ✦";
 
-function openPost(id) {
-  currentPostId = id;
-  const p = posts.find(x => x.id===id);
-  if (!p) return;
-  document.getElementById('writings-wrap').style.display = 'none';
-  document.getElementById('post-view').style.display = 'block';
-  document.getElementById('vw-genre').textContent = p.genre;
-  document.getElementById('vw-title').textContent = p.title;
-  document.getElementById('vw-date').textContent  = 'By Hannah · ' + fmt(p.date);
-  document.getElementById('vw-body').textContent  = p.body;
-  document.getElementById('admin-bar').style.display = isHannah ? 'flex' : 'none';
-  renderComments();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+        if (error) return toast("Error: " + error.message, true);
 
-function closePost() {
-  currentPostId = null;
-  document.getElementById('post-view').style.display    = 'none';
-  document.getElementById('writings-wrap').style.display = 'block';
-}
+        // Clear the form
+        document.getElementById("new-title").value = "";
+        document.getElementById("new-body").value = "";
 
-async function deletePost() {
-  if (!isHannah || !currentPostId) return;
+        posts.unshift(post); // add to front since we order newest-first
+        renderWritings();
+        toast("Published ✦");
+      }
 
-  await supabase.from("posts").delete().eq("id", currentPostId);
-  await supabase.from("comments").delete().eq("postId", currentPostId);
+      function openPost(id) {
+        currentPostId = id;
+        const p = posts.find((x) => x.id === id);
+        if (!p) return;
+        document.getElementById("writings-wrap").style.display = "none";
+        document.getElementById("post-view").style.display = "block";
+        document.getElementById("vw-genre").textContent = p.genre;
+        document.getElementById("vw-title").textContent = p.title;
+        document.getElementById("vw-date").textContent =
+          "By Hannah · " + fmt(p.date);
+        document.getElementById("vw-body").textContent = p.body;
+        document.getElementById("admin-bar").style.display = isHannah
+          ? "flex"
+          : "none";
+        renderComments();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
 
-  posts = posts.filter(p => p.id !== currentPostId);
-  comments = comments.filter(c => c.postId !== currentPostId);
+      function closePost() {
+        currentPostId = null;
+        document.getElementById("post-view").style.display = "none";
+        document.getElementById("writings-wrap").style.display = "block";
+      }
 
-  closePost();
-  renderWritings();
-}
+      async function deletePost() {
+        if (!isHannah || !currentPostId) return;
+        if (
+          !confirm(
+            "Delete this writing and all its comments? This can't be undone.",
+          )
+        )
+          return;
 
-// ── COMMENTS ─────────────────────────────
-function renderComments() {
-  if (!currentPostId) return;
-  const mine = comments.filter(c=>c.postId===currentPostId).slice().reverse();
-  const list = document.getElementById('comments-list');
-  if (!mine.length) {
-    list.innerHTML = '<p style="text-align:center;font-style:italic;color:rgba(26,16,8,.38);font-size:.88rem;padding:20px 0">No comments yet — be the first to leave a note!</p>';
-    return;
-  }
-  list.innerHTML = mine.map(c=>`
+        const btn = document.getElementById("btn-del-post");
+        btn.disabled = true;
+
+        const { error } = await sb
+          .from("posts")
+          .delete()
+          .eq("id", currentPostId);
+        if (error) {
+          btn.disabled = false;
+          return toast("Error: " + error.message, true);
+        }
+
+        // Also delete all comments for this post
+        await sb.from("comments").delete().eq("postId", currentPostId);
+
+        posts = posts.filter((p) => p.id !== currentPostId);
+        comments = comments.filter((c) => c.postId !== currentPostId);
+
+        closePost();
+        renderWritings();
+        toast("Writing deleted.");
+      }
+
+      // ── COMMENTS ──────────────────────────────
+      function renderComments() {
+        if (!currentPostId) return;
+        // Comments already ordered newest-first from Supabase
+        const mine = comments.filter((c) => c.postId === currentPostId);
+        const list = document.getElementById("comments-list");
+        if (!mine.length) {
+          list.innerHTML =
+            '<p style="text-align:center;font-style:italic;color:rgba(26,16,8,.38);font-size:.88rem;padding:20px 0">No comments yet — be the first to leave a note!</p>';
+          return;
+        }
+        list.innerHTML = mine
+          .map(
+            (c) => `
     <div class="comment-item">
       <div class="comment-author">${e(c.name)}</div>
       <div class="comment-text">${e(c.text)}</div>
       <div class="comment-date">${fmt(c.date)}</div>
-      ${isHannah ? `<button class="btn-del-c" onclick="deleteComment('${c.id}')">✕ remove</button>` : ''}
-    </div>`).join('');
-}
+      ${isHannah ? `<button class="btn-del-c" onclick="deleteComment('${c.id}')">✕ remove</button>` : ""}
+    </div>`,
+          )
+          .join("");
+      }
 
-async function submitComment() {
-  const name = document.getElementById('c-name').value.trim() || "Anonymous";
-  const text = document.getElementById('c-text').value.trim();
+      async function submitComment() {
+        const name =
+          document.getElementById("c-name").value.trim() || "Anonymous";
+        const text = document.getElementById("c-text").value.trim();
 
-  if (!text) return toast("Write something", true);
+        if (!text) return toast("Write something first.", true);
 
-  const c = {
-    id: "c_" + Date.now(),
-    postId: currentPostId,
-    name,
-    text,
-    date: new Date().toISOString()
-  };
+        const btn = document.getElementById("btn-comment");
+        btn.disabled = true;
+        btn.textContent = "Posting…";
 
-  const { error } = await supabase.from("comments").insert(c);
+        // FIX: postId column is camelCase in the DB schema so we use "postId" here too
+        const c = {
+          id: "c_" + Date.now(),
+          postId: currentPostId,
+          name,
+          text,
+          date: new Date().toISOString(),
+        };
 
-  if (error) return toast(error.message, true);
+        const { error } = await sb.from("comments").insert(c);
 
-  comments.push(c);
-  renderComments();
-  renderWritings();
-  toast("Comment posted ✦");
-}
-  
-async function deleteComment(id) {
-  await supabase.from("comments").delete().eq("id", id);
+        btn.disabled = false;
+        btn.textContent = "Post Comment ✦";
 
-  comments = comments.filter(c => c.id !== id);
-  renderComments();
-  renderWritings();
-}
+        if (error) return toast("Error: " + error.message, true);
 
-// ── ABOUT ─────────────────────────────────
-function renderAboutDisplay() {
-  document.getElementById('about-display').textContent = aboutTxt;
-  document.getElementById('about-display').style.display  = isHannah ? 'none'  : 'block';
-  document.getElementById('about-edit').style.display     = isHannah ? 'block' : 'none';
-  document.getElementById('about-save-row').style.display = isHannah ? 'block' : 'none';
-  if (isHannah) document.getElementById('about-edit').value = aboutTxt;
-}
+        // Clear fields
+        document.getElementById("c-name").value = "";
+        document.getElementById("c-text").value = "";
 
-async function saveAbout() {
-  const text = document.getElementById('about-edit').value.trim();
-  if (!text) return;
+        comments.unshift(c);
+        renderComments();
+        renderWritings(); // update comment count on cards
+        toast("Comment posted ✦");
+      }
 
-  aboutTxt = text;
+      async function deleteComment(id) {
+        const { error } = await sb.from("comments").delete().eq("id", id);
+        if (error) return toast("Error: " + error.message, true);
 
-  await supabase
-    .from("about")
-    .update({ text })
-    .eq("id", 1);
+        comments = comments.filter((c) => c.id !== id);
+        renderComments();
+        renderWritings();
+      }
 
-  toast("Bio updated ✦");
-}
+      // ── ABOUT ──────────────────────────────────
+      function renderAboutDisplay() {
+        document.getElementById("about-display").textContent = aboutTxt;
+        document.getElementById("about-display").style.display = isHannah
+          ? "none"
+          : "block";
+        document.getElementById("about-edit").style.display = isHannah
+          ? "block"
+          : "none";
+        document.getElementById("about-save-row").style.display = isHannah
+          ? "block"
+          : "none";
+        if (isHannah) document.getElementById("about-edit").value = aboutTxt;
+      }
 
-// ── UTILS ─────────────────────────────────
-function e(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-function fmt(iso) {
-  try { return new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}); } catch{return '';}
-}
-function showSpinner(id) { document.getElementById(id).innerHTML='<div class="spinner"></div>'; }
+      async function saveAbout() {
+        const text = document.getElementById("about-edit").value.trim();
+        if (!text) return;
 
-let toastTm;
-function toast(msg, isErr=false) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast show' + (isErr?' err':'');
-  clearTimeout(toastTm);
-  toastTm = setTimeout(()=>t.classList.remove('show'), 3500);
-}
+        const btn = document.getElementById("btn-save-about");
+        btn.disabled = true;
 
-document.getElementById('login-modal').addEventListener('click', ev => {
-  if (ev.target===document.getElementById('login-modal')) closeModal();
-});
+        // FIX: use upsert so it works whether the row exists or not
+        const { error } = await sb.from("about").upsert({ id: 1, text });
 
-// ── INIT ──────────────────────────────────
-loadAll();
-loadAbout();
-</script>
-</body>
+        btn.disabled = false;
+
+        if (error) return toast("Error: " + error.message, true);
+
+        aboutTxt = text;
+        renderAboutDisplay();
+        toast("Bio updated ✦");
+      }
+
+      // ── UTILS ──────────────────────────────────
+      function e(s) {
+        return String(s)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+      function fmt(iso) {
+        try {
+          return new Date(iso).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          });
+        } catch {
+          return "";
+        }
+      }
+      function showSpinner(id) {
+        document.getElementById(id).innerHTML = '<div class="spinner"></div>';
+      }
+
+      let toastTm;
+      function toast(msg, isErr = false) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "toast show" + (isErr ? " err" : "");
+        clearTimeout(toastTm);
+        toastTm = setTimeout(() => t.classList.remove("show"), 3500);
+      }
+
+      document.getElementById("login-modal").addEventListener("click", (ev) => {
+        if (ev.target === document.getElementById("login-modal")) closeModal();
+      });
+
+      // ── INIT ───────────────────────────────────
+      loadAll();
+      loadAbout();
+    </script>
+  </body>
 </html>
