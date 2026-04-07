@@ -362,6 +362,7 @@ async function ghWrite(path, data, message) {
   if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.message || `GitHub ${r.status}`); }
   const d = await r.json();
   shas[path] = d.content.sha;
+  console.log("GitHub response:", r.status);
 }
 
 // ── LOAD ──────────────────────────────────
