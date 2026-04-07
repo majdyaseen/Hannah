@@ -193,22 +193,9 @@
 -->
 <script>
 const CONFIG = {
-  owner:    "majdyaseen",   // ← your GitHub username
-  repo:     "Hannah",         // ← the repo name (must be public)
-  password: "Hannah@2009",           // ← Hannah's login password (change this!)
-  token:    "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",                       // ← paste your GitHub PAT here (keep it secret!)
-
-  // ── Don't edit below ──
-  branch: "main",
-  files: {
-    posts:    "data/posts.json",
-    comments: "data/comments.json",
-    about:    "data/about.json",
-  }
+  supabaseUrl: "https://nrrfgosvdxiowkdlanmy.supabase.co",
+  supabaseKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ycmZnb3N2ZHhpb3drZGxhbm15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzY1OTIsImV4cCI6MjA5MTE1MjU5Mn0.JKAWqJqqM4JaUykyJ04_fR7fhoL0CfD5IUihC8vcS20",
 };
-console.log("GitHub owner:", CONFIG.owner);
-console.log("GitHub repo:", CONFIG.repo);
-console.log("Token preview:", CONFIG.token?.slice(0, 6));
 </script>
 
 <header>
@@ -328,95 +315,46 @@ console.log("Token preview:", CONFIG.token?.slice(0, 6));
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 // ── STATE ─────────────────────────────────
 let isHannah = false;
 let posts    = [];
 let comments = [];
 let aboutTxt = "Welcome to my little corner of the internet. Here I share the stories, essays, and musings that live in my head and eventually find their way onto the page. Pull up a chair, make yourself at home.";
-let shas     = {};   // file path → sha (needed for GitHub PUT)
 let currentPostId = null;
-  function cleanToken(t) {
-  return (t || "").replace(/\s/g, "");
-}
 
-// ── GITHUB HELPERS ────────────────────────
-const GH = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/`;
-
-async function ghRead(path) {
-  const r = await fetch(GH + path + `?ref=${CONFIG.branch}&t=${Date.now()}`, {
-    headers: {
-      Authorization: `token ${cleanToken(CONFIG.token)}`
-    }
-  });
-
-  if (!r.ok) {
-    throw new Error(`GitHub ${r.status}: ${await r.text()}`);
-  }
-
-  const d = await r.json();
-  shas[path] = d.sha;
-
-  return JSON.parse(
-    decodeURIComponent(escape(atob(d.content.replace(/\n/g, ""))))
-  );
-}
-
-async function ghWrite(path, data, message) {
-  const body = {
-    message,
-    content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
-    branch: CONFIG.branch,
-  };
-
-  if (shas[path]) body.sha = shas[path];
-
-  const r = await fetch(GH + path, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `token ${cleanToken(CONFIG.token)}`
-    },
-    body: JSON.stringify(body),
-  });
-
-  const text = await r.text();
-
-  if (!r.ok) {
-    console.error("GitHub error response:", text);
-    throw new Error(`GitHub ${r.status}: ${text}`);
-  }
-
-  const d = JSON.parse(text);
-  shas[path] = d.content.sha;
-}
-
+const supabase = window.supabase.createClient(
+  CONFIG.supabaseUrl,
+  CONFIG.supabaseKey
+);
+  
 // ── LOAD ──────────────────────────────────
 async function loadAll() {
   showSpinner('writings-grid');
-  try {
-    [posts, comments] = await Promise.all([
-      ghRead(CONFIG.files.posts).catch(()=>[]),
-      ghRead(CONFIG.files.comments).catch(()=>[]),
-    ]);
-    renderWritings();
-  } catch(e) {
-    document.getElementById('writings-grid').innerHTML = `
-      <div class="empty-state">
-        <div class="glyph">⚠</div>
-        <p>Could not reach GitHub.<br>
-        Make sure <code>CONFIG.owner</code> and <code>CONFIG.repo</code> are filled in,<br>
-        the repo is public, and the <code>data/</code> files exist.<br>
-        See the README for full setup instructions.</p>
-      </div>`;
-  }
+
+  const { data: postsData } = await supabase
+    .from("posts")
+    .select("*");
+
+  const { data: commentsData } = await supabase
+    .from("comments")
+    .select("*");
+
+  posts = postsData || [];
+  comments = commentsData || [];
+
+  renderWritings();
 }
 
 async function loadAbout() {
-  try {
-    const d = await ghRead(CONFIG.files.about).catch(()=>null);
-    if (d && d.text) aboutTxt = d.text;
-  } catch(_) {}
+  const { data } = await supabase
+    .from("about")
+    .select("text")
+    .eq("id", 1)
+    .single();
+
+  if (data?.text) aboutTxt = data.text;
   renderAboutDisplay();
 }
 
@@ -500,27 +438,28 @@ function renderWritings() {
 
 async function publishWriting() {
   if (!isHannah) return;
+
   const title = document.getElementById('new-title').value.trim();
   const genre = document.getElementById('new-genre').value;
   const body  = document.getElementById('new-body').value.trim();
-  if (!title) { toast("Add a title first!",true); return; }
-  if (!body)  { toast("The page seems empty…",true); return; }
 
-  const btn = document.getElementById('btn-publish');
-  btn.disabled = true; btn.textContent = 'Publishing…';
-  try {
-    const post = { id:'p_'+Date.now(), title, genre, body, date:new Date().toISOString() };
-    posts.push(post);
-    await ghWrite(CONFIG.files.posts, posts, `Add post: ${title}`);
-    document.getElementById('new-title').value = '';
-    document.getElementById('new-body').value  = '';
-    renderWritings();
-    toast("Published to the shelf ✦");
-  } catch(err) {
-    posts.pop();
-    toast("Publish failed: "+err.message, true);
-  }
-  btn.disabled = false; btn.textContent = 'Publish to the Shelf ✦';
+  if (!title || !body) return toast("Fill everything", true);
+
+  const post = {
+    id: "p_" + Date.now(),
+    title,
+    genre,
+    body,
+    date: new Date().toISOString()
+  };
+
+  const { error } = await supabase.from("posts").insert(post);
+
+  if (error) return toast(error.message, true);
+
+  posts.push(post);
+  renderWritings();
+  toast("Published ✦");
 }
 
 function openPost(id) {
@@ -546,24 +485,15 @@ function closePost() {
 
 async function deletePost() {
   if (!isHannah || !currentPostId) return;
-  if (!confirm("Delete this writing permanently?")) return;
-  const btn = document.getElementById('btn-del-post');
-  btn.disabled=true; btn.textContent='Deleting…';
-  try {
-    const idx = posts.findIndex(p=>p.id===currentPostId);
-    posts.splice(idx,1);
-    const leftoverComments = comments.filter(c=>c.postId!==currentPostId);
-    await Promise.all([
-      ghWrite(CONFIG.files.posts,    posts,            `Delete post ${currentPostId}`),
-      ghWrite(CONFIG.files.comments, leftoverComments, `Remove comments for deleted post`),
-    ]);
-    comments = leftoverComments;
-    closePost(); renderWritings();
-    toast("Writing removed from the shelf.");
-  } catch(err) {
-    toast("Delete failed: "+err.message, true);
-    btn.disabled=false; btn.textContent='Delete Writing';
-  }
+
+  await supabase.from("posts").delete().eq("id", currentPostId);
+  await supabase.from("comments").delete().eq("postId", currentPostId);
+
+  posts = posts.filter(p => p.id !== currentPostId);
+  comments = comments.filter(c => c.postId !== currentPostId);
+
+  closePost();
+  renderWritings();
 }
 
 // ── COMMENTS ─────────────────────────────
@@ -585,42 +515,35 @@ function renderComments() {
 }
 
 async function submitComment() {
-  const name = document.getElementById('c-name').value.trim() || 'Anonymous Reader';
+  const name = document.getElementById('c-name').value.trim() || "Anonymous";
   const text = document.getElementById('c-text').value.trim();
-  if (!text) { toast("Write something first!",true); return; }
-  if (!currentPostId) return;
 
-  const btn = document.getElementById('btn-comment');
-  btn.disabled=true; btn.textContent='Posting…';
-  try {
-    const c = { id:'c_'+Date.now(), postId:currentPostId, name, text, date:new Date().toISOString() };
-    comments.push(c);
-    await ghWrite(CONFIG.files.comments, comments, `Comment on post ${currentPostId}`);
-    document.getElementById('c-name').value  = '';
-    document.getElementById('c-email').value = '';
-    document.getElementById('c-text').value  = '';
-    renderComments(); renderWritings();
-    toast("Your note has been left ✦");
-  } catch(err) {
-    comments.pop();
-    toast("Could not post: "+err.message, true);
-  }
-  btn.disabled=false; btn.textContent='Post Comment ✦';
+  if (!text) return toast("Write something", true);
+
+  const c = {
+    id: "c_" + Date.now(),
+    postId: currentPostId,
+    name,
+    text,
+    date: new Date().toISOString()
+  };
+
+  const { error } = await supabase.from("comments").insert(c);
+
+  if (error) return toast(error.message, true);
+
+  comments.push(c);
+  renderComments();
+  renderWritings();
+  toast("Comment posted ✦");
 }
-
+  
 async function deleteComment(id) {
-  if (!isHannah) return;
-  const idx = comments.findIndex(c=>c.id===id);
-  if (idx===-1) return;
-  const [removed] = comments.splice(idx,1);
-  try {
-    await ghWrite(CONFIG.files.comments, comments, `Delete comment ${id}`);
-    renderComments(); renderWritings();
-    toast("Comment removed.");
-  } catch(err) {
-    comments.splice(idx,0,removed);
-    toast("Failed: "+err.message, true);
-  }
+  await supabase.from("comments").delete().eq("id", id);
+
+  comments = comments.filter(c => c.id !== id);
+  renderComments();
+  renderWritings();
 }
 
 // ── ABOUT ─────────────────────────────────
@@ -633,20 +556,17 @@ function renderAboutDisplay() {
 }
 
 async function saveAbout() {
-  if (!isHannah) return;
   const text = document.getElementById('about-edit').value.trim();
   if (!text) return;
-  const btn = document.getElementById('btn-save-about');
-  btn.disabled=true; btn.textContent='Saving…';
-  try {
-    aboutTxt = text;
-    await ghWrite(CONFIG.files.about, { text }, 'Update about bio');
-    document.getElementById('about-display').textContent = text;
-    toast("Bio updated ✦");
-  } catch(err) {
-    toast("Save failed: "+err.message, true);
-  }
-  btn.disabled=false; btn.textContent='Save Bio ✦';
+
+  aboutTxt = text;
+
+  await supabase
+    .from("about")
+    .update({ text })
+    .eq("id", 1);
+
+  toast("Bio updated ✦");
 }
 
 // ── UTILS ─────────────────────────────────
