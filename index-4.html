@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hannah's Bookshop</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --ink: #1a1008;
+    --parchment: #f5edd8;
+    --warm-white: #fdf8ef;
+    --cream: #ede5ce;
+    --brown: #6b3f1e;
+    --rust: #9b4a1f;
+    --gold: #c9972b;
+    --gold-light: #e8c96a;
+    --sage: #7a8c6e;
+    --shadow: rgba(26,16,8,0.15);
+    --deep-shadow: rgba(26,16,8,0.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--warm-white);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 20%, rgba(201,151,43,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(107,63,30,0.06) 0%, transparent 50%);
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brown), var(--gold), var(--rust), var(--gold), var(--brown));
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 32px 40px;
+    text-align: center;
+    position: relative;
+  }
+
+  .shop-ornament {
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.4em;
+    font-family: 'IM Fell English SC', serif;
+    opacity: 0.8;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  h1.shop-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.6rem, 6vw, 4.2rem);
+    font-weight: 900;
+    color: var(--parchment);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  h1.shop-title em {
+    color: var(--gold-light);
+    font-style: italic;
+  }
+
+  .shop-tagline {
+    color: rgba(245,237,216,0.55);
+    font-size: 0.9rem;
+    letter-spacing: 0.25em;
+    font-family: 'IM Fell English SC', serif;
+    margin-top: 14px;
+  }
+
+  .header-deco {
+    color: var(--gold);
+    opacity: 0.4;
+    font-size: 1.4rem;
+    margin: 10px 0 0;
+    letter-spacing: 0.6em;
+  }
+
+  /* ── NAV BAR ── */
+  nav {
+    background: var(--cream);
+    border-bottom: 1px solid rgba(107,63,30,0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .nav-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 0;
+  }
+
+  .nav-links button {
+    background: none;
+    border: none;
+    padding: 14px 20px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: var(--brown);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .nav-links button:hover,
+  .nav-links button.active {
+    color: var(--rust);
+    border-bottom-color: var(--gold);
+    background: rgba(201,151,43,0.07);
+  }
+
+  .nav-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  #auth-btn {
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    padding: 8px 18px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    border-radius: 2px;
+  }
+
+  #auth-btn:hover { background: var(--brown); transform: translateY(-1px); }
+
+  #auth-status {
+    font-size: 0.75rem;
+    color: var(--sage);
+    font-style: italic;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .section-header h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: var(--brown);
+    font-style: italic;
+  }
+
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    opacity: 0.5;
+  }
+
+  /* ── WRITE / PUBLISH PANEL ── */
+  #write-panel {
+    background: var(--parchment);
+    border: 1px solid rgba(107,63,30,0.25);
+    border-radius: 2px;
+    padding: 36px 40px;
+    margin-bottom: 48px;
+    box-shadow: 0 4px 24px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.6);
+    display: none;
+    animation: fadeSlideDown 0.35s ease;
+  }
+
+  @keyframes fadeSlideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  #write-panel h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--brown);
+    margin-bottom: 24px;
+    font-style: italic;
+  }
+
+  .field-group {
+    margin-bottom: 20px;
+  }
+
+  .field-group label {
+    display: block;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    color: var(--rust);
+    margin-bottom: 7px;
+  }
+
+  .field-group input,
+  .field-group textarea,
+  .field-group select {
+    width: 100%;
+    background: var(--warm-white);
+    border: 1px solid rgba(107,63,30,0.3);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+
+  .field-group input:focus,
+  .field-group textarea:focus,
+  .field-group select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,43,0.15);
+  }
+
+  .field-group textarea { min-height: 200px; line-height: 1.7; }
+
+  .btn-publish {
+    background: var(--brown);
+    color: var(--parchment);
+    border: none;
+    padding: 12px 32px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    border-radius: 2px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .btn-publish:hover {
+    background: var(--rust);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px var(--deep-shadow);
+  }
+
+  /* ── WRITING CARDS ── */
+  .writings-grid {
+    display: grid;
+    gap: 28px;
+  }
+
+  .writing-card {
+    background: #fff;
+    border: 1px solid rgba(107,63,30,0.15);
+    border-left: 4px solid var(--gold);
+    border-radius: 2px;
+    padding: 32px 36px;
+    box-shadow: 0 2px 16px var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeIn 0.4s ease;
+    cursor: pointer;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .writing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px var(--shadow);
+  }
+
+  .card-genre {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--sage);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--brown);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .card-excerpt {
+    color: rgba(26,16,8,0.65);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .card-date {
+    font-size: 0.75rem;
+    color: rgba(26,16,8,0.4);
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.1em;
+  }
+
+  .card-comments-count {
+    font-size: 0.75rem;
+    color: var(--rust);
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.05em;
+  }
+
+  .btn-read {
+    background: none;
+    border: 1px solid var(--brown);
+    color: var(--brown);
+    padding: 6px 16px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 2px;
+  }
+
+  .btn-read:hover {
+    background: var(--brown);
+    color: var(--parchment);
+  }
+
+  /* ── SINGLE POST VIEW ── */
+  #post-view {
+    animation: fadeIn 0.4s ease;
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--brown);
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    margin-bottom: 32px;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+  }
+
+  .back-link:hover { color: var(--rust); }
+
+  .post-header {
+    border-bottom: 1px solid rgba(107,63,30,0.2);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+
+  .post-genre {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    color: var(--sage);
+    margin-bottom: 12px;
+  }
+
+  .post-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: var(--ink);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .post-date {
+    font-size: 0.78rem;
+    color: rgba(26,16,8,0.45);
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.1em;
+  }
+
+  .post-body {
+    font-size: 1.05rem;
+    line-height: 1.9;
+    color: rgba(26,16,8,0.85);
+    margin-bottom: 56px;
+    white-space: pre-wrap;
+  }
+
+  .post-body p { margin-bottom: 1.4em; }
+
+  /* Admin controls */
+  .admin-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .btn-danger {
+    background: none;
+    border: 1px solid #c0392b;
+    color: #c0392b;
+    padding: 6px 14px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .btn-danger:hover { background: #c0392b; color: #fff; }
+
+  /* ── COMMENTS ── */
+  .comments-section {
+    border-top: 1px solid rgba(107,63,30,0.2);
+    padding-top: 40px;
+  }
+
+  .comments-section h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--brown);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .comment-form {
+    background: var(--parchment);
+    border: 1px solid rgba(107,63,30,0.2);
+    border-radius: 2px;
+    padding: 28px 32px;
+    margin-bottom: 36px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .comment-form h4 {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    color: var(--rust);
+    margin-bottom: 18px;
+  }
+
+  .comment-form input,
+  .comment-form textarea {
+    width: 100%;
+    background: var(--warm-white);
+    border: 1px solid rgba(107,63,30,0.25);
+    border-radius: 2px;
+    padding: 10px 14px;
+    font-family: 'Lora', serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    resize: vertical;
+  }
+
+  .comment-form input:focus,
+  .comment-form textarea:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,43,0.15);
+  }
+
+  .comment-form textarea { min-height: 90px; }
+
+  .btn-comment {
+    background: var(--sage);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .btn-comment:hover { background: #5f7053; transform: translateY(-1px); }
+
+  .comments-list { display: grid; gap: 16px; }
+
+  .comment-item {
+    background: #fff;
+    border: 1px solid rgba(107,63,30,0.1);
+    border-radius: 2px;
+    padding: 20px 24px;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .comment-author {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--brown);
+    margin-bottom: 6px;
+  }
+
+  .comment-text {
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: rgba(26,16,8,0.75);
+  }
+
+  .comment-date {
+    font-size: 0.7rem;
+    color: rgba(26,16,8,0.35);
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.08em;
+    margin-top: 10px;
+  }
+
+  .btn-delete-comment {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: none;
+    border: none;
+    color: rgba(26,16,8,0.25);
+    cursor: pointer;
+    font-size: 0.75rem;
+    font-family: 'IM Fell English SC', serif;
+    letter-spacing: 0.05em;
+    transition: color 0.2s;
+    display: none;
+  }
+
+  .btn-delete-comment:hover { color: #c0392b; }
+  .is-author .btn-delete-comment { display: block; }
+
+  .no-comments {
+    font-style: italic;
+    color: rgba(26,16,8,0.4);
+    font-size: 0.88rem;
+    text-align: center;
+    padding: 24px 0;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 64px 32px;
+  }
+
+  .empty-state .big-ornament {
+    font-size: 3rem;
+    opacity: 0.2;
+    margin-bottom: 20px;
+  }
+
+  .empty-state p {
+    color: rgba(26,16,8,0.4);
+    font-style: italic;
+    font-size: 1rem;
+  }
+
+  /* ── LOGIN MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26,16,8,0.6);
+    backdrop-filter: blur(3px);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--parchment);
+    border: 1px solid rgba(107,63,30,0.3);
+    border-radius: 2px;
+    padding: 44px 48px;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 16px 64px rgba(26,16,8,0.4);
+    animation: fadeSlideDown 0.3s ease;
+    position: relative;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 14px; right: 18px;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: rgba(26,16,8,0.4);
+    transition: color 0.2s;
+  }
+
+  .modal-close:hover { color: var(--ink); }
+
+  .modal h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--brown);
+    font-style: italic;
+    margin-bottom: 6px;
+  }
+
+  .modal p.modal-sub {
+    font-size: 0.82rem;
+    color: rgba(26,16,8,0.5);
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+
+  .modal input {
+    width: 100%;
+    background: var(--warm-white);
+    border: 1px solid rgba(107,63,30,0.3);
+    border-radius: 2px;
+    padding: 11px 14px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .modal input:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,43,0.15);
+  }
+
+  .modal-error {
+    color: #c0392b;
+    font-size: 0.8rem;
+    font-style: italic;
+    margin-bottom: 12px;
+    display: none;
+  }
+
+  .btn-login {
+    width: 100%;
+    background: var(--brown);
+    color: var(--parchment);
+    border: none;
+    padding: 13px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.9rem;
+    letter-spacing: 0.18em;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: background 0.2s;
+  }
+
+  .btn-login:hover { background: var(--rust); }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--ink);
+    color: var(--parchment);
+    padding: 12px 24px;
+    border-radius: 2px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 24px rgba(26,16,8,0.5);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
+    z-index: 500;
+    border-left: 3px solid var(--gold);
+  }
+
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── ABOUT PAGE ── */
+  #about-page {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 40px 0;
+    animation: fadeIn 0.4s ease;
+  }
+
+  #about-page .portrait-ring {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold), var(--rust));
+    margin: 0 auto 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    box-shadow: 0 4px 24px var(--shadow);
+  }
+
+  #about-page h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--brown);
+    font-style: italic;
+    margin-bottom: 10px;
+  }
+
+  #about-page .about-role {
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    color: var(--sage);
+    margin-bottom: 28px;
+  }
+
+  #about-page .about-bio {
+    font-size: 0.98rem;
+    line-height: 1.85;
+    color: rgba(26,16,8,0.7);
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 20px;
+    text-align: left;
+    margin-bottom: 28px;
+  }
+
+  #about-page .about-edit {
+    width: 100%;
+    background: var(--warm-white);
+    border: 1px solid rgba(107,63,30,0.25);
+    border-radius: 2px;
+    padding: 12px 16px;
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    color: var(--ink);
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    display: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  #about-page .about-edit:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,151,43,0.15);
+  }
+
+  /* ── DECORATIVE DIVIDER ── */
+  .ornament-divider {
+    text-align: center;
+    color: var(--gold);
+    opacity: 0.35;
+    font-size: 1.1rem;
+    letter-spacing: 0.8em;
+    margin: 40px 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: rgba(245,237,216,0.4);
+    text-align: center;
+    padding: 24px 32px;
+    font-family: 'IM Fell English SC', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+  }
+
+  footer span { color: var(--gold); opacity: 0.7; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .header-inner { padding: 36px 20px 28px; }
+    main { padding: 28px 20px 60px; }
+    #write-panel { padding: 24px 20px; }
+    .writing-card { padding: 24px 20px; }
+    .modal { padding: 32px 24px; }
+    .comment-form { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="header-inner">
+    <span class="shop-ornament">✦ Est. with love ✦</span>
+    <h1 class="shop-title"><em>Hannah's</em> Bookshop</h1>
+    <p class="shop-tagline">A corner of the internet for stories & musings</p>
+    <div class="header-deco">· · ·</div>
+  </div>
+</header>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-links">
+      <button class="active" onclick="showPage('library')">Library</button>
+      <button onclick="showPage('about')">About</button>
+    </div>
+    <div class="nav-auth">
+      <span id="auth-status"></span>
+      <button id="auth-btn" onclick="handleAuthBtn()">Hannah's Desk</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── MAIN ── -->
+<main>
+
+  <!-- LIBRARY PAGE -->
+  <div id="library-page">
+
+    <!-- Write Panel (Hannah only) -->
+    <div id="write-panel">
+      <h3>✍ Publish a New Writing</h3>
+      <div class="field-group">
+        <label>Title</label>
+        <input type="text" id="new-title" placeholder="What shall we call it…"/>
+      </div>
+      <div class="field-group">
+        <label>Genre / Type</label>
+        <select id="new-genre">
+          <option value="Short Story">Short Story</option>
+          <option value="Essay">Essay</option>
+          <option value="Poetry">Poetry</option>
+          <option value="Flash Fiction">Flash Fiction</option>
+          <option value="Memoir">Memoir</option>
+          <option value="Reflection">Reflection</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>Your Writing</label>
+        <textarea id="new-body" placeholder="Pour your words here…"></textarea>
+      </div>
+      <button class="btn-publish" onclick="publishWriting()">Publish to the Shelf ✦</button>
+    </div>
+
+    <!-- Writing list -->
+    <div id="writings-container">
+      <div class="section-header">
+        <h2>On the Shelf</h2>
+        <div class="section-rule"></div>
+      </div>
+      <div class="writings-grid" id="writings-grid"></div>
+    </div>
+
+    <!-- Single post view -->
+    <div id="post-view" style="display:none;">
+      <button class="back-link" onclick="closePost()">← Back to the shelf</button>
+      <div id="admin-controls" class="admin-controls" style="display:none;">
+        <button class="btn-danger" onclick="deleteCurrentPost()">Delete Writing</button>
+      </div>
+      <div class="post-header">
+        <div class="post-genre" id="view-genre"></div>
+        <div class="post-title" id="view-title"></div>
+        <div class="post-date" id="view-date"></div>
+      </div>
+      <div class="post-body" id="view-body"></div>
+
+      <!-- Comments -->
+      <div class="comments-section">
+        <h3>Reader's Corner</h3>
+
+        <div class="comment-form">
+          <h4>Leave a Note</h4>
+          <input type="text" id="comment-name" placeholder="Your name (or a pen name)…" maxlength="60"/>
+          <textarea id="comment-text" placeholder="What did you think? Share your thoughts…" maxlength="800"></textarea>
+          <button class="btn-comment" onclick="submitComment()">Post Comment ✦</button>
+        </div>
+
+        <div class="comments-list" id="comments-list"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ABOUT PAGE -->
+  <div id="about-page" style="display:none;">
+    <div class="portrait-ring">📚</div>
+    <h2>Hannah</h2>
+    <p class="about-role">Author · Storyteller · Keeper of this little shop</p>
+    <div class="about-bio" id="about-bio-text">
+      Welcome to my little corner of the internet. Here I share the stories, essays, and musings that live in my head and eventually find their way onto the page. Pull up a chair, make yourself at home.
+    </div>
+    <textarea class="about-edit" id="about-edit-field" maxlength="600"></textarea>
+    <div id="about-edit-controls" style="display:none;">
+      <button class="btn-publish" onclick="saveAbout()">Save Bio ✦</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>✦</span> &nbsp; Hannah's Bookshop &nbsp; <span>✦</span> &nbsp; All writings belong to their author &nbsp; <span>✦</span>
+</footer>
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Welcome back,</h3>
+    <p class="modal-sub">Hannah's desk is password-protected.</p>
+    <input type="password" id="password-input" placeholder="Enter your secret password…" onkeydown="if(event.key==='Enter')tryLogin()"/>
+    <div class="modal-error" id="modal-error">That's not quite right. Try again.</div>
+    <button class="btn-login" onclick="tryLogin()">Open the Desk</button>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─────────────────────────────────────────
+//  CONFIG — change the password here!
+// ─────────────────────────────────────────
+const HANNAH_PASSWORD = "bookshop2024";
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+let isHannah = false;
+let currentPostId = null;
+
+// ─────────────────────────────────────────
+//  STORAGE HELPERS
+// ─────────────────────────────────────────
+function getWritings() {
+  try { return JSON.parse(localStorage.getItem('hb_writings') || '[]'); } catch { return []; }
+}
+
+function saveWritings(w) {
+  localStorage.setItem('hb_writings', JSON.stringify(w));
+}
+
+function getComments(postId) {
+  try { return JSON.parse(localStorage.getItem('hb_comments_' + postId) || '[]'); } catch { return []; }
+}
+
+function saveComments(postId, c) {
+  localStorage.setItem('hb_comments_' + postId, JSON.stringify(c));
+}
+
+function getAbout() {
+  return localStorage.getItem('hb_about') || "Welcome to my little corner of the internet. Here I share the stories, essays, and musings that live in my head and eventually find their way onto the page. Pull up a chair, make yourself at home.";
+}
+
+function saveAbout(text) {
+  localStorage.setItem('hb_about', text);
+}
+
+// ─────────────────────────────────────────
+//  AUTH
+// ─────────────────────────────────────────
+function handleAuthBtn() {
+  if (isHannah) {
+    logout();
+  } else {
+    openModal();
+  }
+}
+
+function openModal() {
+  document.getElementById('login-modal').classList.add('open');
+  document.getElementById('password-input').value = '';
+  document.getElementById('modal-error').style.display = 'none';
+  setTimeout(() => document.getElementById('password-input').focus(), 100);
+}
+
+function closeModal() {
+  document.getElementById('login-modal').classList.remove('open');
+}
+
+function tryLogin() {
+  const pw = document.getElementById('password-input').value;
+  if (pw === HANNAH_PASSWORD) {
+    isHannah = true;
+    closeModal();
+    updateAuthUI();
+    document.getElementById('write-panel').style.display = 'block';
+    showToast("Welcome back, Hannah ✦");
+    if (currentPostId) renderAdminControls();
+  } else {
+    document.getElementById('modal-error').style.display = 'block';
+    document.getElementById('password-input').value = '';
+    document.getElementById('password-input').focus();
+  }
+}
+
+function logout() {
+  isHannah = false;
+  updateAuthUI();
+  document.getElementById('write-panel').style.display = 'none';
+  document.getElementById('admin-controls').style.display = 'none';
+  document.querySelector('#about-page .about-edit').style.display = 'none';
+  document.getElementById('about-edit-controls').style.display = 'none';
+  document.getElementById('about-bio-text').style.display = 'block';
+  document.querySelectorAll('.btn-delete-comment').forEach(b => b.style.display = 'none');
+  renderComments(currentPostId);
+  showToast("Logged out. See you soon!");
+}
+
+function updateAuthUI() {
+  const btn = document.getElementById('auth-btn');
+  const status = document.getElementById('auth-status');
+  if (isHannah) {
+    btn.textContent = "Log Out";
+    status.textContent = "✦ Hannah";
+    document.getElementById('about-edit-controls').style.display = 'block';
+  } else {
+    btn.textContent = "Hannah's Desk";
+    status.textContent = '';
+    document.getElementById('about-edit-controls').style.display = 'none';
+  }
+}
+
+// ─────────────────────────────────────────
+//  PAGES
+// ─────────────────────────────────────────
+function showPage(page) {
+  document.getElementById('library-page').style.display = page === 'library' ? 'block' : 'none';
+  document.getElementById('about-page').style.display = page === 'about' ? 'block' : 'none';
+  document.querySelectorAll('.nav-links button').forEach((b,i) => {
+    b.classList.toggle('active', (page === 'library' && i === 0) || (page === 'about' && i === 1));
+  });
+
+  if (page === 'about') {
+    renderAbout();
+  }
+}
+
+// ─────────────────────────────────────────
+//  WRITINGS
+// ─────────────────────────────────────────
+function renderWritings() {
+  const writings = getWritings();
+  const grid = document.getElementById('writings-grid');
+
+  if (writings.length === 0) {
+    grid.innerHTML = `
+      <div class="empty-state">
+        <div class="big-ornament">📖</div>
+        <p>The shelf is empty for now — Hannah is still writing.</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = writings.slice().reverse().map(w => {
+    const excerpt = w.body.length > 180 ? w.body.slice(0, 180).trim() + '…' : w.body;
+    const comments = getComments(w.id);
+    return `
+      <div class="writing-card" onclick="openPost('${w.id}')">
+        <div class="card-genre">${escHtml(w.genre)}</div>
+        <div class="card-title">${escHtml(w.title)}</div>
+        <div class="card-excerpt">${escHtml(excerpt)}</div>
+        <div class="card-meta">
+          <span class="card-date">${formatDate(w.date)}</span>
+          <span class="card-comments-count">${comments.length} comment${comments.length !== 1 ? 's' : ''}</span>
+          <button class="btn-read" onclick="event.stopPropagation();openPost('${w.id}')">Read →</button>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function publishWriting() {
+  if (!isHannah) return;
+  const title = document.getElementById('new-title').value.trim();
+  const genre = document.getElementById('new-genre').value;
+  const body = document.getElementById('new-body').value.trim();
+
+  if (!title) { showToast("Please add a title!"); return; }
+  if (!body) { showToast("The page seems empty…"); return; }
+
+  const writings = getWritings();
+  const writing = {
+    id: 'w_' + Date.now(),
+    title, genre, body,
+    date: new Date().toISOString()
+  };
+  writings.push(writing);
+  saveWritings(writings);
+
+  document.getElementById('new-title').value = '';
+  document.getElementById('new-body').value = '';
+  renderWritings();
+  showToast("Published to the shelf ✦");
+}
+
+function openPost(id) {
+  currentPostId = id;
+  const writings = getWritings();
+  const w = writings.find(x => x.id === id);
+  if (!w) return;
+
+  document.getElementById('writings-container').style.display = 'none';
+  document.getElementById('post-view').style.display = 'block';
+  document.getElementById('view-genre').textContent = w.genre;
+  document.getElementById('view-title').textContent = w.title;
+  document.getElementById('view-date').textContent = 'By Hannah · ' + formatDate(w.date);
+  document.getElementById('view-body').textContent = w.body;
+
+  renderAdminControls();
+  renderComments(id);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function closePost() {
+  currentPostId = null;
+  document.getElementById('post-view').style.display = 'none';
+  document.getElementById('writings-container').style.display = 'block';
+  renderWritings();
+}
+
+function renderAdminControls() {
+  document.getElementById('admin-controls').style.display = isHannah ? 'flex' : 'none';
+}
+
+function deleteCurrentPost() {
+  if (!isHannah || !currentPostId) return;
+  if (!confirm("Delete this writing? This can't be undone.")) return;
+  const writings = getWritings().filter(w => w.id !== currentPostId);
+  saveWritings(writings);
+  localStorage.removeItem('hb_comments_' + currentPostId);
+  closePost();
+  showToast("Writing removed from the shelf.");
+}
+
+// ─────────────────────────────────────────
+//  COMMENTS
+// ─────────────────────────────────────────
+function renderComments(postId) {
+  if (!postId) return;
+  const comments = getComments(postId);
+  const list = document.getElementById('comments-list');
+
+  if (comments.length === 0) {
+    list.innerHTML = '<p class="no-comments">No comments yet — be the first to leave a note!</p>';
+    return;
+  }
+
+  list.innerHTML = comments.slice().reverse().map(c => `
+    <div class="comment-item ${isHannah ? 'is-author' : ''}">
+      <div class="comment-author">${escHtml(c.name)}</div>
+      <div class="comment-text">${escHtml(c.text)}</div>
+      <div class="comment-date">${formatDate(c.date)}</div>
+      <button class="btn-delete-comment" onclick="deleteComment('${postId}','${c.id}')">✕ remove</button>
+    </div>`).join('');
+}
+
+function submitComment() {
+  const name = document.getElementById('comment-name').value.trim() || 'Anonymous Reader';
+  const text = document.getElementById('comment-text').value.trim();
+
+  if (!text) { showToast("Write something first!"); return; }
+  if (!currentPostId) return;
+
+  const comments = getComments(currentPostId);
+  comments.push({
+    id: 'c_' + Date.now(),
+    name, text,
+    date: new Date().toISOString()
+  });
+  saveComments(currentPostId, comments);
+
+  document.getElementById('comment-name').value = '';
+  document.getElementById('comment-text').value = '';
+  renderComments(currentPostId);
+  renderWritings();
+  showToast("Your note has been left ✦");
+}
+
+function deleteComment(postId, commentId) {
+  if (!isHannah) return;
+  const comments = getComments(postId).filter(c => c.id !== commentId);
+  saveComments(postId, comments);
+  renderComments(postId);
+  renderWritings();
+  showToast("Comment removed.");
+}
+
+// ─────────────────────────────────────────
+//  ABOUT
+// ─────────────────────────────────────────
+function renderAbout() {
+  const bio = getAbout();
+  document.getElementById('about-bio-text').textContent = bio;
+  document.getElementById('about-edit-field').value = bio;
+
+  if (isHannah) {
+    document.getElementById('about-bio-text').style.display = 'none';
+    document.getElementById('about-edit-field').style.display = 'block';
+    document.getElementById('about-edit-controls').style.display = 'block';
+  } else {
+    document.getElementById('about-bio-text').style.display = 'block';
+    document.getElementById('about-edit-field').style.display = 'none';
+    document.getElementById('about-edit-controls').style.display = 'none';
+  }
+}
+
+function saveAbout() {
+  const text = document.getElementById('about-edit-field').value.trim();
+  if (!text) return;
+  localStorage.setItem('hb_about', text);
+  document.getElementById('about-bio-text').textContent = text;
+  showToast("Bio updated ✦");
+}
+
+// ─────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+
+function formatDate(iso) {
+  try {
+    return new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch { return ''; }
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Close modal on overlay click
+document.getElementById('login-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ─────────────────────────────────────────
+//  INIT
+// ─────────────────────────────────────────
+renderWritings();
+updateAuthUI();
+</script>
+</body>
+</html>
