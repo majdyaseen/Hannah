@@ -206,6 +206,9 @@ const CONFIG = {
     about:    "data/about.json",
   }
 };
+console.log("GitHub owner:", CONFIG.owner);
+console.log("GitHub repo:", CONFIG.repo);
+console.log("Token preview:", CONFIG.token?.slice(0, 6));
 </script>
 
 <header>
@@ -333,18 +336,30 @@ let comments = [];
 let aboutTxt = "Welcome to my little corner of the internet. Here I share the stories, essays, and musings that live in my head and eventually find their way onto the page. Pull up a chair, make yourself at home.";
 let shas     = {};   // file path → sha (needed for GitHub PUT)
 let currentPostId = null;
+  function cleanToken(t) {
+  return (t || "").replace(/\s/g, "");
+}
 
 // ── GITHUB HELPERS ────────────────────────
 const GH = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/contents/`;
 
 async function ghRead(path) {
   const r = await fetch(GH + path + `?ref=${CONFIG.branch}&t=${Date.now()}`, {
-    headers: CONFIG.token ? { Authorization: `token ${CONFIG.token}` } : {}
+    headers: {
+      Authorization: `token ${cleanToken(CONFIG.token)}`
+    }
   });
-  if (!r.ok) throw new Error(`GitHub ${r.status}: ${r.statusText}`);
+
+  if (!r.ok) {
+    throw new Error(`GitHub ${r.status}: ${await r.text()}`);
+  }
+
   const d = await r.json();
   shas[path] = d.sha;
-  return JSON.parse(decodeURIComponent(escape(atob(d.content.replace(/\n/g,'')))));
+
+  return JSON.parse(
+    decodeURIComponent(escape(atob(d.content.replace(/\n/g, ""))))
+  );
 }
 
 async function ghWrite(path, data, message) {
@@ -353,16 +368,27 @@ async function ghWrite(path, data, message) {
     content: btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2)))),
     branch: CONFIG.branch,
   };
+
   if (shas[path]) body.sha = shas[path];
+
   const r = await fetch(GH + path, {
-    method: 'PUT',
-    headers: { 'Content-Type':'application/json', Authorization:`token ${CONFIG.token}` },
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `token ${cleanToken(CONFIG.token)}`
+    },
     body: JSON.stringify(body),
   });
-  if (!r.ok) { const e = await r.json().catch(()=>({})); throw new Error(e.message || `GitHub ${r.status}`); }
-  const d = await r.json();
+
+  const text = await r.text();
+
+  if (!r.ok) {
+    console.error("GitHub error response:", text);
+    throw new Error(`GitHub ${r.status}: ${text}`);
+  }
+
+  const d = JSON.parse(text);
   shas[path] = d.content.sha;
-  console.log("GitHub response:", r.status);
 }
 
 // ── LOAD ──────────────────────────────────
